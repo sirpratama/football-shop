@@ -4,12 +4,12 @@
 **Student ID:** 2406453556  
 **Class:** KKI  
 
-## 🌐 PWS Application Link
+## PWS Application Link
 **Application URL:** [https://muhammad-rafi416-footballshop.pbp.cs.ui.ac.id](https://muhammad-rafi416-footballshop.pbp.cs.ui.ac.id)
 
 ---
 
-## 📋 Checklist Implementation Step-by-Step
+## Checklist Implementation Step-by-Step
 
 ### 1. Creating a New Django Project
 - Created project directory `football-shop`
@@ -71,7 +71,7 @@ def show_main(request):
 
 ---
 
-## 🔄 Django Request-Response Diagram
+## Django Request-Response Diagram
 
 ```
 ┌─────────────────┐    HTTP Request     ┌─────────────────┐
@@ -120,7 +120,7 @@ def show_main(request):
 
 ---
 
-## ⚙️ Role of `settings.py` in Django Project
+## Role of `settings.py` in Django Project
 
 `settings.py` is the central configuration file that manages all aspects of Django application:
 
@@ -167,7 +167,7 @@ INSTALLED_APPS = [
 
 ---
 
-## 🗄️ How Database Migration Works in Django
+## How Database Migration Works in Django
 
 ### 1. **Migration Concept**
 Migration is Django's way to apply model changes (database schema) to the database gradually and in a controlled manner.
@@ -220,9 +220,9 @@ class Migration(migrations.Migration):
 
 ---
 
-## 🤔 Why is Django Chosen for Initial Learning?
+## Why is Django Chosen for Initial Learning?
 
-### 1. **"Batteries Included" Philosophy**
+### 1. **"Packaged Beautifully**
 - Django provides almost everything needed for web development
 - Admin interface, ORM, authentication, security features built-in
 - Reduces setup and configuration complexity
@@ -263,7 +263,7 @@ Django teaches important concepts such as:
 
 ---
 
-## 💬 Feedback for Tutorial 1 Teaching Assistant
+## Feedback for Tutorial 1 Teaching Assistant
 
 *No Feedback*
 
