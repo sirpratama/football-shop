@@ -34,6 +34,14 @@ ALLOWED_HOSTS = [
     'muhammad-rafi416-footballshop.pbp.cs.ui.ac.id',
 ]
 
+# CSRF trusted origins for production
+CSRF_TRUSTED_ORIGINS = [
+    'https://muhammad-rafi416-footballshop.pbp.cs.ui.ac.id',
+    'http://muhammad-rafi416-footballshop.pbp.cs.ui.ac.id',
+    'http://localhost:8000',
+    'http://127.0.0.1:8000',
+]
+
 
 # Application definition
 
