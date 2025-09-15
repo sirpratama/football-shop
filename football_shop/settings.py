@@ -83,19 +83,32 @@ WSGI_APPLICATION = 'football_shop.wsgi.application'
 # Database configuration
 if PRODUCTION:
     # Production: gunakan PostgreSQL dengan kredensial dari environment variables
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql',
-            'NAME': os.getenv('DB_NAME'),
-            'USER': os.getenv('DB_USER'),
-            'PASSWORD': os.getenv('DB_PASSWORD'),
-            'HOST': os.getenv('DB_HOST'),
-            'PORT': os.getenv('DB_PORT'),
-            'OPTIONS': {
-                'options': f"-c search_path={os.getenv('SCHEMA', 'public')}"
+    # Check if all required PostgreSQL environment variables are set
+    postgres_vars = ['DB_NAME', 'DB_USER', 'DB_PASSWORD', 'DB_HOST', 'DB_PORT']
+    postgres_configured = all(os.getenv(var) for var in postgres_vars)
+    
+    if postgres_configured:
+        DATABASES = {
+            'default': {
+                'ENGINE': 'django.db.backends.postgresql',
+                'NAME': os.getenv('DB_NAME'),
+                'USER': os.getenv('DB_USER'),
+                'PASSWORD': os.getenv('DB_PASSWORD'),
+                'HOST': os.getenv('DB_HOST'),
+                'PORT': os.getenv('DB_PORT'),
+                'OPTIONS': {
+                    'options': f"-c search_path={os.getenv('SCHEMA', 'public')}"
+                }
             }
         }
-    }
+    else:
+        # Fallback to SQLite if PostgreSQL is not properly configured
+        DATABASES = {
+            'default': {
+                'ENGINE': 'django.db.backends.sqlite3',
+                'NAME': BASE_DIR / 'db.sqlite3',
+            }
+        }
 else:
     # Development: gunakan SQLite
     DATABASES = {
