@@ -1,0 +1,5 @@
+remote.pws.url https://pbp.cs.ui.ac.id/muhammad.rafi416/footballshop
+remote.pws.fetch +refs/heads/*:refs/remotes/pws/*
+remote.origin.url https://github.com/sirpratama/football-shop.git
+remote.origin.fetch +refs/heads/*:refs/remotes/origin/*
+branch.main.remote origin
