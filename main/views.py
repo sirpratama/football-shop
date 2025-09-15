@@ -6,6 +6,50 @@ from django.http import HttpResponse
 
 def show_main(request):
     football_items = FootballItem.objects.all()
+    
+    # Create sample data if database is empty (for PWS deployment)
+    if not football_items.exists():
+        sample_items = [
+            {
+                'name': 'Manchester United Home Jersey',
+                'price': 750000,
+                'description': 'Official Manchester United home jersey for the 2024/25 season. Made with high-quality materials and featuring the classic red color with white accents.',
+                'thumbnail': 'https://images.unsplash.com/photo-1551698618-1dfe5d97d256?w=400',
+                'category': 'Jersey',
+                'brand': 'Adidas',
+                'is_featured': True,
+                'stock': 25,
+                'size': 'L'
+            },
+            {
+                'name': 'Nike Premier League Football',
+                'price': 450000,
+                'description': 'Official Nike Premier League match ball. FIFA Quality Pro certified with innovative design for superior flight and touch.',
+                'thumbnail': 'https://images.unsplash.com/photo-1486286701208-1d58e9338013?w=400',
+                'category': 'Ball',
+                'brand': 'Nike',
+                'is_featured': False,
+                'stock': 15,
+                'size': '5'
+            },
+            {
+                'name': 'Adidas Predator Football Boots',
+                'price': 1200000,
+                'description': 'Professional football boots with innovative Predator technology. Designed for precision, power, and control on the pitch.',
+                'thumbnail': 'https://images.unsplash.com/photo-1544966503-7cc5ac882d5f?w=400',
+                'category': 'Boots',
+                'brand': 'Adidas',
+                'is_featured': True,
+                'stock': 8,
+                'size': '42'
+            }
+        ]
+        
+        for item_data in sample_items:
+            FootballItem.objects.create(**item_data)
+        
+        # Refresh the queryset after creating sample data
+        football_items = FootballItem.objects.all()
 
     context = {
         'npm' : '2406453556',
