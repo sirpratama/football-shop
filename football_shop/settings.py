@@ -32,7 +32,6 @@ ALLOWED_HOSTS = [
     'localhost',
     '127.0.0.1',
     'muhammad-rafi416-footballshop.pbp.cs.ui.ac.id',
-    'https://muhammad-rafi416-footballshop.pbp.cs.ui.ac.id/'
 ]
 
 
