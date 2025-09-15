@@ -3,9 +3,29 @@ from main.forms import FootballItemForm
 from main.models import FootballItem
 from django.core import serializers
 from django.http import HttpResponse
+from django.core.management import call_command
+from django.db import connection
+import logging
+
+logger = logging.getLogger(__name__)
 
 def show_main(request):
-    football_items = FootballItem.objects.all()
+    # Check if the table exists and run migrations if needed
+    try:
+        football_items = FootballItem.objects.all()
+    except Exception as e:
+        # If table doesn't exist, run migrations
+        if "does not exist" in str(e) or "no such table" in str(e):
+            try:
+                logger.info("Running database migrations...")
+                call_command('migrate', verbosity=0, interactive=False)
+                football_items = FootballItem.objects.all()
+            except Exception as migration_error:
+                logger.error(f"Migration failed: {migration_error}")
+                # Return an error page or create an empty queryset
+                football_items = FootballItem.objects.none()
+        else:
+            raise e
     
     # Create sample data if database is empty (for PWS deployment)
     if not football_items.exists():
