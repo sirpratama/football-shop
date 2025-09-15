@@ -13,22 +13,32 @@ def show_main(request):
     # Check if the table exists and run migrations if needed
     try:
         football_items = FootballItem.objects.all()
+        # Test if we can actually query the table
+        table_exists = football_items.exists()
     except Exception as e:
         # If table doesn't exist, run migrations
-        if "does not exist" in str(e) or "no such table" in str(e):
+        if "does not exist" in str(e) or "no such table" in str(e) or "UndefinedTable" in str(e):
             try:
                 logger.info("Running database migrations...")
                 call_command('migrate', verbosity=0, interactive=False)
                 football_items = FootballItem.objects.all()
+                table_exists = football_items.exists()
             except Exception as migration_error:
                 logger.error(f"Migration failed: {migration_error}")
-                # Return an error page or create an empty queryset
-                football_items = FootballItem.objects.none()
+                # Create empty context for error handling
+                context = {
+                    'npm' : '2406453556',
+                    'name': 'Muhammad Rafi Nazir Pratama',
+                    'class': 'KKI',
+                    'football_items': [],
+                    'error': 'Database initialization failed. Please contact administrator.'
+                }
+                return render(request, "main.html", context)
         else:
             raise e
     
     # Create sample data if database is empty (for PWS deployment)
-    if not football_items.exists():
+    if not table_exists:
         sample_items = [
             {
                 'name': 'Manchester United Home Jersey',
