@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ football_item.name }} - Football Shop</title>
+</head>
+<body>
+    <div>
+        <p><a href="{% url 'main:show_main' %}"><button>← Back to Football Shop</button></a></p>
+
+        <h1>{{ football_item.name }}</h1>
+        <p><b>{{ football_item.category }}</b>{% if football_item.brand %} | 
+            <b>{{ football_item.brand }}</b>{% endif %}{% if football_item.is_featured %} | 
+            <b>Featured</b>{% endif %} | <i>{{ football_item.created_at|date:"d M Y, H:i" }}</i></p>
+
+        <p>Price: Rp {{ football_item.price|floatformat:0 }}</p>
+        
+        {% if football_item.size %}
+        <p><b>Size:</b> {{ football_item.size }}</p>
+        {% endif %}
+        
+        <p><b>Stock:</b> {{ football_item.stock }} items available</p>
+
+        {% if football_item.thumbnail %}
+        <img src="{{ football_item.thumbnail }}" alt="Football item thumbnail" width="300">
+        <br /><br />
+        {% endif %}
+
+        <p>{{ football_item.description }}</p>
+    </div>
+</body>
+</html>

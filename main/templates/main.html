@@ -33,13 +33,27 @@
             color: #7f8c8d;
             margin-bottom: 15px;
         }
+        .create-btn {
+            display: inline-block;
+            background-color: #3498db;
+            color: white;
+            padding: 12px 24px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            margin-top: 20px;
+            transition: background-color 0.3s;
+        }
+        .create-btn:hover {
+            background-color: #2980b9;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>⚽ Football Shop</h1>
         
-        <h5>NPM:</h5>
+        <h5>NPM: </h5>
         <p>{{ npm }}</p>
         
         <h5>Name:</h5>
@@ -47,6 +61,40 @@
         
         <h5>Class:</h5>
         <p>{{ class }}</p>
+        
+        <a href="{% url 'main:create_football_item' %}">
+            <button>+ Add Football Item</button>
+        </a>
+        
+        <hr>
+        
+        {% if not football_items %}
+        <p>Belum ada data item pada football shop.</p>
+        {% else %}
+        
+        {% for item in football_items %}
+        <div>
+            <h2><a href="{% url 'main:show_football_item_detail' item.id %}">{{ item.name }}</a></h2>
+            
+            <p><b>{{ item.category }}</b>{% if item.brand %} | 
+                <b>{{ item.brand }}</b>{% endif %}{% if item.is_featured %} | 
+                <b>Featured</b>{% endif %} | <i>{{ item.created_at|date:"d M Y H:i" }}</i> 
+                | Price: Rp {{ item.price|floatformat:0 }}</p>
+            
+            {% if item.thumbnail %}
+            <img src="{{ item.thumbnail }}" alt="thumbnail" width="150" height="100">
+            <br />
+            {% endif %}
+            
+            <p>{{ item.description|truncatewords:25 }}...</p>
+            
+            <p><a href="{% url 'main:show_football_item_detail' item.id %}"><button>View Details</button></a></p>
+        </div>
+        
+        <hr>
+        {% endfor %}
+        
+        {% endif %}
     </div>
 </body>
 </html>
