@@ -472,12 +472,6 @@ I modified `main/templates/main.html` to display model objects with proper navig
 {% endfor %}
 ```
 
-<!-- Screenshot showing the list of items -->
-<div align="center">
-    <img src="images/item_list_screenshot.png" alt="Football Items List" width="500">
-    <p><em>List of football items with Add and Detail buttons</em></p>
-</div>
-
 **Key Features:**
 - Loops through all football items using `{% for %}`
 - Each item title is a clickable link to detail page
@@ -505,12 +499,6 @@ def show_main(request):
 ### **4. Creating Form Page**
 
 I created `main/templates/create_football_item.html` for adding new items:
-
-<!-- Screenshot of the form page -->
-<div align="center">
-    <img src="images/create_form_screenshot.png" alt="Create Football Item Form" width="500">
-    <p><em>Form page for adding new football items</em></p>
-</div>
 
 ```html
 <form method="POST">
@@ -550,12 +538,6 @@ def create_football_item(request):
 ### **5. Creating Detail Page**
 
 I created `main/templates/show_football_item_detail.html` to display individual item details:
-
-<!-- Screenshot of the detail page -->
-<div align="center">
-    <img src="images/detail_page_screenshot.png" alt="Football Item Detail Page" width="500">
-    <p><em>Detail page showing complete information about a football item</em></p>
-</div>
 
 ```html
 <h1>{{ football_item.name }}</h1>
