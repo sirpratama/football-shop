@@ -27,6 +27,12 @@
         <br /><br />
         {% endif %}
 
+        {% if football_item.user %}
+            <p><b>Owner:</b> {{ football_item.user.username }}</p>
+        {% else %}
+            <p><b>Owner:</b> Anonymous</p>
+        {% endif %}
+
         <p>{{ football_item.description }}</p>
     </div>
 </body>

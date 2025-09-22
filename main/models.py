@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 # Create your models here.
 
 class FootballItem(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     name = models.CharField(max_length=255, help_text="Name of the football item")
     price = models.IntegerField(help_text="Price in rupiah")
     description = models.TextField(help_text="Detailed description of the item")

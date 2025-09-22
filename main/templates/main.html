@@ -65,8 +65,21 @@
         <a href="{% url 'main:create_football_item' %}">
             <button>+ Add Football Item</button>
         </a>
+
+        <a href="{% url 'main:logout' %}">
+            <button>Logout</button>
+        </a>
+
+        <p>Last Login: {{ last_login }}</p>
         
         <hr>
+
+        <a href="?filter=all">
+            <button type="button">All Articles</button>
+        </a>
+        <a href="?filter=my">
+            <button type="button">My Articles</button>
+        </a> 
         
         {% if not football_items %}
         <p>Belum ada data item pada football shop.</p>
