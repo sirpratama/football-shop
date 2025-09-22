@@ -1082,12 +1082,12 @@ After connecting the Product model with User model, I added 3 football items for
 **User 1 (testuser1) Items:**
 1. **Manchester United Home Jersey** - Price: Rp 850,000
 2. **Nike Mercurial Boots** - Price: Rp 1,200,000  
-3. **Official FIFA Ball** - Price: Rp 450,000
+3. **Fifa World Cup Ball 2024** - Price: Rp 450,000
 
 **User 2 (testuser2) Items:**
 1. **Barcelona Away Jersey** - Price: Rp 900,000
-2. **Adidas Predator Boots** - Price: Rp 1,100,000
-3. **Training Football** - Price: Rp 200,000
+2. **Adidas Football Nemeziz Shoes** - Price: Rp 1,100,000
+3. **Valdes Gloves** - Price: Rp 200,000
 
 ### **✅ 3. Connecting Product Model with User Model**
 
