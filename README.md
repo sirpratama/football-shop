@@ -8,6 +8,7 @@
 **Application URL:** [https://muhammad-rafi416-footballshop.pbp.cs.ui.ac.id](https://muhammad-rafi416-footballshop.pbp.cs.ui.ac.id)
 
 ---
+## Assignment 2
 
 ## Checklist Implementation Step-by-Step
 
@@ -358,12 +359,6 @@ def transfer_money(request):
 
 ## Implementation Step-by-Step
 
-<!-- You can add screenshots here to show your application -->
-<div align="center">
-    <img src="images/main_page_screenshot.png" alt="Main Page Screenshot" width="600">
-    <p><em>Main page showing football items with Add and Detail buttons</em></p>
-</div>
-
 ### **1. Adding 4 New View Functions for Data Formats**
 
 I implemented four new view functions in `main/views.py` to handle different data format requests:
@@ -415,14 +410,6 @@ def show_json_by_id(request, id):
 ```
 - Same logic as XML by ID but returns JSON format
 - Includes proper error handling
-
-<!-- Screenshots showing API endpoints -->
-<div align="center">
-    <h4>API Endpoints Screenshots</h4>
-    <img src="images/xml_output_screenshot.png" alt="XML Output" width="45%" style="margin: 10px;">
-    <img src="images/json_output_screenshot.png" alt="JSON Output" width="45%" style="margin: 10px;">
-    <p><em>XML and JSON API endpoints showing data serialization</em></p>
-</div>
 
 ### **2. Creating URL Routings**
 
