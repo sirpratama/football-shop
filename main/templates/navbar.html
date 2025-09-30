@@ -149,41 +149,152 @@
         flex-wrap: wrap;
     }
 
+    .navbar-header {
+        display: contents;
+    }
+
+    /* Hamburger Menu Styles */
+    .hamburger {
+        display: none;
+        flex-direction: column;
+        cursor: pointer;
+        padding: 4px;
+        border-radius: 6px;
+        transition: all 0.3s ease;
+    }
+
+    .hamburger:hover {
+        background: rgba(255, 255, 255, 0.1);
+    }
+
+    .hamburger span {
+        width: 25px;
+        height: 3px;
+        background: white;
+        margin: 3px 0;
+        transition: all 0.3s ease;
+        border-radius: 2px;
+    }
+
+    .hamburger.active span:nth-child(1) {
+        transform: rotate(-45deg) translate(-5px, 6px);
+    }
+
+    .hamburger.active span:nth-child(2) {
+        opacity: 0;
+    }
+
+    .hamburger.active span:nth-child(3) {
+        transform: rotate(45deg) translate(-5px, -6px);
+    }
+
+    .mobile-menu {
+        max-height: 0;
+        overflow: hidden;
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(16px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 0 0 16px 16px;
+        border-top: none;
+        margin-top: -1px;
+        transition: max-height 0.3s ease-out, padding 0.3s ease-out;
+        padding: 0 20px;
+    }
+
+    .mobile-menu.active {
+        max-height: 500px;
+        padding: 20px;
+    }
+
+    @keyframes slideDown {
+        from {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .mobile-menu-items {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    .mobile-menu-items .nav-link {
+        width: 100%;
+        text-align: left;
+        padding: 12px 16px;
+        display: block;
+        border-radius: 8px;
+    }
+
+    .mobile-user-info {
+        margin-top: 20px;
+        padding-top: 20px;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .mobile-user-welcome {
+        color: white;
+        text-align: center;
+        margin-bottom: 15px;
+    }
+
+    .mobile-user-welcome .user-name {
+        display: block;
+        font-weight: 600;
+        color: rgba(255, 107, 53, 0.9);
+        margin-bottom: 5px;
+    }
+
+    .mobile-user-welcome .user-details {
+        font-size: 12px;
+        color: rgba(255, 255, 255, 0.8);
+    }
+
+    .mobile-user-actions {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .mobile-user-actions .nav-link {
+        width: 100%;
+        text-align: center;
+    }
+
     /* Mobile Responsive */
     @media (max-width: 768px) {
         .navbar {
             padding: 15px 20px;
             flex-direction: column;
-            text-align: center;
-            gap: 15px;
+            align-items: stretch;
+        }
+
+        .navbar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
         }
 
         .navbar-brand {
             font-size: 1.5rem;
         }
 
-        .navbar-nav {
-            justify-content: center;
-            gap: 10px;
+        .hamburger {
+            display: flex;
         }
 
-        .nav-link {
-            padding: 6px 12px;
-            font-size: 13px;
-        }
-
+        .navbar-nav,
         .navbar-user-info {
-            flex-direction: column;
-            text-align: center;
-            gap: 10px;
-        }
-
-        .user-welcome {
-            align-items: center;
-        }
-
-        .navbar-actions {
-            justify-content: center;
+            display: none;
         }
 
         /* Reduce animations on mobile for performance */
@@ -191,41 +302,21 @@
             transform: translateY(-2px);
         }
     }
-
-    @media (max-width: 480px) {
-        .navbar {
-            padding: 12px 15px;
-        }
-
-        .navbar-nav {
-            flex-direction: column;
-            gap: 8px;
-            width: 100%;
-        }
-
-        .nav-link {
-            width: 100%;
-            text-align: center;
-            padding: 10px;
-        }
-
-        .navbar-actions {
-            flex-direction: column;
-            width: 100%;
-            gap: 8px;
-        }
-
-        .navbar-actions .nav-link {
-            width: 100%;
-        }
-    }
 </style>
 
 <nav class="navbar">
-    <div class="navbar-brand-section">
+    <div class="navbar-header">
         <a href="/" class="navbar-brand">⚽ Football Shop</a>
+        
+        <!-- Mobile Hamburger Menu -->
+        <div class="hamburger" onclick="toggleMobileMenu()">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
     </div>
     
+    <!-- Desktop Navigation -->
     <ul class="navbar-nav">
         <li><a href="/" class="nav-link">Home</a></li>
         <li><a href="{% url 'main:create_football_item' %}" class="nav-link primary">+ Add Item</a></li>
@@ -233,6 +324,7 @@
         <li><a href="?filter=my" class="nav-link">My Articles</a></li>
     </ul>
   
+    <!-- Desktop User Info -->
     <div class="navbar-user-info">
     {% if user.is_authenticated %}
             <div class="user-welcome">
@@ -241,12 +333,71 @@
             </div>
             <div class="navbar-actions">
                 <a href="{% url 'main:logout' %}" class="nav-link">Logout</a>
-      </div>
+            </div>
     {% else %}
             <div class="navbar-actions">
                 <a href="{% url 'main:login' %}" class="nav-link">Login</a>
                 <a href="{% url 'main:register' %}" class="nav-link primary">Register</a>
-      </div>
+            </div>
     {% endif %}
     </div>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu" id="mobileMenu">
+        <ul class="mobile-menu-items">
+            <li><a href="/" class="nav-link">Home</a></li>
+            <li><a href="{% url 'main:create_football_item' %}" class="nav-link primary">+ Add Item</a></li>
+            <li><a href="?filter=all" class="nav-link">All Articles</a></li>
+            <li><a href="?filter=my" class="nav-link">My Articles</a></li>
+    </ul>
+  
+        <div class="mobile-user-info">
+    {% if user.is_authenticated %}
+                <div class="mobile-user-welcome">
+                    <span class="user-name">{{ name|default:user.username }}</span>
+                    <span class="user-details">{{ npm|default:"Student" }} - {{ class|default:"Class" }}</span>
+                </div>
+                <div class="mobile-user-actions">
+                    <a href="{% url 'main:logout' %}" class="nav-link">Logout</a>
+      </div>
+    {% else %}
+                <div class="mobile-user-actions">
+                    <a href="{% url 'main:login' %}" class="nav-link">Login</a>
+                    <a href="{% url 'main:register' %}" class="nav-link primary">Register</a>
+      </div>
+    {% endif %}
+        </div>
+    </div>
   </nav>
+
+<script>
+function toggleMobileMenu() {
+    const hamburger = document.querySelector('.hamburger');
+    const mobileMenu = document.getElementById('mobileMenu');
+    
+    hamburger.classList.toggle('active');
+    mobileMenu.classList.toggle('active');
+}
+
+// Close mobile menu when clicking outside
+document.addEventListener('click', function(event) {
+    const navbar = document.querySelector('.navbar');
+    const mobileMenu = document.getElementById('mobileMenu');
+    const hamburger = document.querySelector('.hamburger');
+    
+    if (!navbar.contains(event.target) && mobileMenu.classList.contains('active')) {
+        hamburger.classList.remove('active');
+        mobileMenu.classList.remove('active');
+    }
+});
+
+// Close mobile menu when window is resized to desktop
+window.addEventListener('resize', function() {
+    if (window.innerWidth > 768) {
+        const hamburger = document.querySelector('.hamburger');
+        const mobileMenu = document.getElementById('mobileMenu');
+        hamburger.classList.remove('active');
+        mobileMenu.classList.remove('active');
+    }
+});
+</script>
