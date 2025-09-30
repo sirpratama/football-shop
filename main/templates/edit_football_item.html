@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add Football Item - Football Shop</title>
+    <title>Edit Football Item - Football Shop</title>
     {% load static %}
     <link rel="stylesheet" type="text/css" href="{% static 'css/global.css' %}">
     <style>
-        /* Create page specific styles */
+        /* Edit page specific styles */
         body {
             background: linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 50%, #000000 100%);
             min-height: 100vh;
@@ -23,7 +23,7 @@
         }
 
         /* Glass morphism card */
-        .create-card {
+        .edit-card {
             background: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(16px);
             border: 1px solid rgba(255, 255, 255, 0.2);
@@ -110,7 +110,7 @@
             box-shadow: 0 12px 28px rgba(255, 107, 53, 0.4);
         }
 
-        .create-title {
+        .edit-title {
             color: white;
             font-size: 2.5rem;
             font-weight: 600;
@@ -219,25 +219,17 @@
             margin-top: 5px;
         }
 
-        /* Help text styling */
-        .helptext {
-            color: rgba(255, 255, 255, 0.6);
-            font-size: 12px;
-            margin-top: 5px;
-            font-style: italic;
-        }
-
         /* Responsive Design */
         @media (max-width: 768px) {
             .main-container {
                 padding: 0 10px;
             }
             
-            .create-card {
+            .edit-card {
                 padding: 20px;
             }
             
-            .create-title {
+            .edit-title {
                 font-size: 2rem;
             }
             
@@ -260,12 +252,12 @@
 </head>
 <body>
     <div class="main-container">
-        <div class="create-card">
+        <div class="edit-card">
             <div class="back-button">
                 <a href="{% url 'main:show_main' %}" class="btn-glass">← Back to Football Shop</a>
             </div>
-        
-            <h1 class="create-title">Add Football Item</h1>
+
+            <h1 class="edit-title">Edit Football Item</h1>
 
             <div class="form-container">
                 <form method="POST">
@@ -275,7 +267,7 @@
                     </table>
                     
                     <div class="form-actions">
-                        <input type="submit" value="Add Football Item" class="btn-glass primary" />
+                        <input type="submit" value="Save Changes" class="btn-glass primary"/>
                         <a href="{% url 'main:show_main' %}" class="btn-glass">Cancel</a>
                     </div>
                 </form>

@@ -1,39 +1,297 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ football_item.name }} - Football Shop</title>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/global.css' %}">
+    <style>
+        /* Detail page specific styles */
+        body {
+            background: linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 50%, #000000 100%);
+            min-height: 100vh;
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 20px;
+            color: white;
+        }
+
+        .main-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        /* Glass morphism card */
+        .detail-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+
+        .back-button {
+            margin-bottom: 20px;
+        }
+
+        .btn-glass {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            text-decoration: none;
+            display: inline-block;
+            font-family: 'Poppins', sans-serif;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-glass::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .btn-glass:hover::before {
+            left: 100%;
+        }
+
+        .btn-glass::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .btn-glass:active::after {
+            width: 300px;
+            height: 300px;
+            transition: width 0s, height 0s;
+        }
+
+        .btn-glass:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-3px);
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.25);
+        }
+
+        .btn-glass:active {
+            transform: translateY(-1px);
+            transition: transform 0.1s;
+        }
+
+        .item-title {
+            color: white;
+            font-size: 2.5rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .item-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 20px;
+            font-size: 1.1rem;
+        }
+
+        .meta-item {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 8px 16px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .meta-item.featured {
+            background: rgba(255, 107, 53, 0.3);
+            border: 1px solid rgba(255, 107, 53, 0.5);
+        }
+
+        .price-section {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .price {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #ff6b35;
+            margin: 0;
+        }
+
+        .item-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .detail-item {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .detail-item h5 {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 14px;
+            font-weight: 500;
+            margin: 0 0 5px 0;
+        }
+
+        .detail-item p {
+            color: white;
+            font-weight: 600;
+            margin: 0;
+            font-size: 1.1rem;
+        }
+
+        .item-image {
+            text-align: center;
+            margin: 30px 0;
+        }
+
+        .item-image img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .description-section {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .description-section h3 {
+            color: white;
+            margin-top: 0;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .description-section p {
+            line-height: 1.6;
+            font-size: 1.1rem;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .main-container {
+                padding: 0 10px;
+            }
+            
+            .detail-card {
+                padding: 20px;
+            }
+            
+            .item-title {
+                font-size: 2rem;
+            }
+            
+            .item-meta {
+                gap: 10px;
+            }
+            
+            .meta-item {
+                font-size: 0.9rem;
+                padding: 6px 12px;
+            }
+            
+            .price {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
 </head>
 <body>
-    <div>
-        <p><a href="{% url 'main:show_main' %}"><button>← Back to Football Shop</button></a></p>
+    <div class="main-container">
+        <div class="detail-card">
+            <div class="back-button">
+                <a href="{% url 'main:show_main' %}" class="btn-glass">← Back to Football Shop</a>
+            </div>
 
-        <h1>{{ football_item.name }}</h1>
-        <p><b>{{ football_item.category }}</b>{% if football_item.brand %} | 
-            <b>{{ football_item.brand }}</b>{% endif %}{% if football_item.is_featured %} | 
-            <b>Featured</b>{% endif %} | <i>{{ football_item.created_at|date:"d M Y, H:i" }}</i></p>
+            <h1 class="item-title">{{ football_item.name }}</h1>
+            
+            <div class="item-meta">
+                <span class="meta-item">{{ football_item.category }}</span>
+                {% if football_item.brand %}
+                    <span class="meta-item">{{ football_item.brand }}</span>
+                {% endif %}
+                {% if football_item.is_featured %}
+                    <span class="meta-item featured">Featured</span>
+                {% endif %}
+                <span class="meta-item">{{ football_item.created_at|date:"d M Y, H:i" }}</span>
+            </div>
 
-        <p>Price: Rp {{ football_item.price|floatformat:0 }}</p>
-        
-        {% if football_item.size %}
-        <p><b>Size:</b> {{ football_item.size }}</p>
-        {% endif %}
-        
-        <p><b>Stock:</b> {{ football_item.stock }} items available</p>
+            <div class="price-section">
+                <p class="price">Rp {{ football_item.price|floatformat:0 }}</p>
+            </div>
 
-        {% if football_item.thumbnail %}
-        <img src="{{ football_item.thumbnail }}" alt="Football item thumbnail" width="300">
-        <br /><br />
-        {% endif %}
+            <div class="item-details">
+                {% if football_item.size %}
+                <div class="detail-item">
+                    <h5>Size</h5>
+                    <p>{{ football_item.size }}</p>
+                </div>
+                {% endif %}
+                
+                <div class="detail-item">
+                    <h5>Stock</h5>
+                    <p>{{ football_item.stock }} items available</p>
+                </div>
 
-        {% if football_item.user %}
-            <p><b>Owner:</b> {{ football_item.user.username }}</p>
-        {% else %}
-            <p><b>Owner:</b> Anonymous</p>
-        {% endif %}
+                <div class="detail-item">
+                    <h5>Owner</h5>
+                    {% if football_item.user %}
+                        <p>{{ football_item.user.username }}</p>
+                    {% else %}
+                        <p>Anonymous</p>
+                    {% endif %}
+                </div>
+            </div>
 
-        <p>{{ football_item.description }}</p>
+            {% if football_item.thumbnail %}
+            <div class="item-image">
+                <img src="{{ football_item.thumbnail }}" alt="{{ football_item.name }}">
+            </div>
+            {% endif %}
+
+            {% if football_item.description %}
+            <div class="description-section">
+                <h3>Description</h3>
+                <p>{{ football_item.description }}</p>
+            </div>
+            {% endif %}
+        </div>
     </div>
 </body>
 </html>

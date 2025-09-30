@@ -1,0 +1,252 @@
+{% load static %}
+<style>
+    /* Navbar specific styles with glassmorphism theme */
+    .navbar {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(16px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        border-radius: 16px;
+        padding: 15px 30px;
+        margin-bottom: 30px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 20px;
+    }
+
+    .navbar-brand {
+        color: white;
+        font-size: 1.8rem;
+        font-weight: 600;
+        text-decoration: none;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+    }
+
+    .navbar-brand:hover {
+        color: rgba(255, 107, 53, 0.9);
+        transform: scale(1.05);
+    }
+
+    .navbar-nav {
+        display: flex;
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        gap: 15px;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+
+    .nav-link {
+        padding: 8px 16px;
+        border: none;
+        border-radius: 10px;
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        color: white;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        text-decoration: none;
+        display: inline-block;
+        font-family: 'Poppins', sans-serif;
+        font-size: 14px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .nav-link::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        transition: left 0.5s ease;
+    }
+
+    .nav-link:hover::before {
+        left: 100%;
+    }
+
+    .nav-link::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 0;
+        height: 0;
+        background: rgba(255, 255, 255, 0.3);
+        border-radius: 50%;
+        transform: translate(-50%, -50%);
+        transition: width 0.6s, height 0.6s;
+    }
+
+    .nav-link:active::after {
+        width: 200px;
+        height: 200px;
+        transition: width 0s, height 0s;
+    }
+
+    .nav-link:hover {
+        background: rgba(255, 255, 255, 0.2);
+        transform: translateY(-3px);
+        box-shadow: 0 12px 28px rgba(0, 0, 0, 0.25);
+        color: white;
+        text-decoration: none;
+    }
+
+    .nav-link:active {
+        transform: translateY(-1px);
+        transition: transform 0.1s;
+    }
+
+    .nav-link.primary {
+        background: rgba(255, 107, 53, 0.8);
+        border: 1px solid rgba(255, 107, 53, 0.3);
+    }
+
+    .nav-link.primary:hover {
+        background: rgba(255, 107, 53, 0.9);
+        box-shadow: 0 12px 28px rgba(255, 107, 53, 0.4);
+    }
+
+    .navbar-user-info {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        flex-wrap: wrap;
+    }
+
+    .user-welcome {
+        color: white;
+        font-size: 14px;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 2px;
+    }
+
+    .user-name {
+        font-weight: 600;
+        color: rgba(255, 107, 53, 0.9);
+    }
+
+    .user-details {
+        font-size: 12px;
+        color: rgba(255, 255, 255, 0.8);
+    }
+
+    .navbar-actions {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+
+    /* Mobile Responsive */
+    @media (max-width: 768px) {
+        .navbar {
+            padding: 15px 20px;
+            flex-direction: column;
+            text-align: center;
+            gap: 15px;
+        }
+
+        .navbar-brand {
+            font-size: 1.5rem;
+        }
+
+        .navbar-nav {
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .nav-link {
+            padding: 6px 12px;
+            font-size: 13px;
+        }
+
+        .navbar-user-info {
+            flex-direction: column;
+            text-align: center;
+            gap: 10px;
+        }
+
+        .user-welcome {
+            align-items: center;
+        }
+
+        .navbar-actions {
+            justify-content: center;
+        }
+
+        /* Reduce animations on mobile for performance */
+        .nav-link:hover {
+            transform: translateY(-2px);
+        }
+    }
+
+    @media (max-width: 480px) {
+        .navbar {
+            padding: 12px 15px;
+        }
+
+        .navbar-nav {
+            flex-direction: column;
+            gap: 8px;
+            width: 100%;
+        }
+
+        .nav-link {
+            width: 100%;
+            text-align: center;
+            padding: 10px;
+        }
+
+        .navbar-actions {
+            flex-direction: column;
+            width: 100%;
+            gap: 8px;
+        }
+
+        .navbar-actions .nav-link {
+            width: 100%;
+        }
+    }
+</style>
+
+<nav class="navbar">
+    <div class="navbar-brand-section">
+        <a href="/" class="navbar-brand">⚽ Football Shop</a>
+    </div>
+    
+    <ul class="navbar-nav">
+        <li><a href="/" class="nav-link">Home</a></li>
+        <li><a href="{% url 'main:create_football_item' %}" class="nav-link primary">+ Add Item</a></li>
+        <li><a href="?filter=all" class="nav-link">All Articles</a></li>
+        <li><a href="?filter=my" class="nav-link">My Articles</a></li>
+    </ul>
+  
+    <div class="navbar-user-info">
+    {% if user.is_authenticated %}
+            <div class="user-welcome">
+                <span class="user-name">{{ name|default:user.username }}</span>
+                <span class="user-details">{{ npm|default:"Student" }} - {{ class|default:"Class" }}</span>
+            </div>
+            <div class="navbar-actions">
+                <a href="{% url 'main:logout' %}" class="nav-link">Logout</a>
+      </div>
+    {% else %}
+            <div class="navbar-actions">
+                <a href="{% url 'main:login' %}" class="nav-link">Login</a>
+                <a href="{% url 'main:register' %}" class="nav-link primary">Register</a>
+      </div>
+    {% endif %}
+    </div>
+  </nav>
