@@ -111,6 +111,7 @@ def login_user(request):
             response = HttpResponseRedirect(reverse("main:show_main"))
             response.set_cookie('last_login', str(datetime.datetime.now()))
             return response
+        # If form is invalid, it will be passed to template with errors
     else:
         form = AuthenticationForm(request)
 
@@ -122,3 +123,19 @@ def logout_user(request):
     response = HttpResponseRedirect(reverse("main:show_main"))
     response.delete_cookie('last_login')
     return response
+
+def edit_football_item(request, id):
+    football_item = get_object_or_404(FootballItem, pk=id)
+    form = FootballItemForm(request.POST or None, instance=football_item)
+    if form.is_valid() and request.method == "POST":
+        form.save()
+        return redirect('main:show_main')
+    
+    context = {'form': form}
+
+    return render(request, 'edit_football_item.html', context)
+
+def delete_football_item(request, id):
+    football_item = get_object_or_404(FootballItem, pk=id)
+    football_item.delete()
+    return redirect('main:show_main')

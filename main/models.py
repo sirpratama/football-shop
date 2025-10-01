@@ -17,3 +17,11 @@ class FootballItem(models.Model):
     size = models.CharField(max_length=10, blank=True, null=True, help_text="Size (S, M, L, XL, or shoe sizes)")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+class Car(models.Model):
+    name = models.CharField(max_length=255, help_text="Name of the car")
+    brand = models.CharField(max_length=255, help_text="Brand of the car (e.g., Toyota, Honda, BMW)")
+    stock = models.IntegerField(default=0, help_text="Number of cars in stock")
+    
+    def __str__(self):
+        return f"{self.brand} {self.name}"

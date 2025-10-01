@@ -1260,3 +1260,1091 @@ def logout_user(request):
 7. **✅ Access Control**: Login required for creating items
 
 This implementation provides a complete authentication system with proper user-data association and cookie management.
+
+---
+
+## Assignment 5
+
+### **CSS Selector Priority: Multiple CSS Selectors Targeting HTML Elements**
+
+When multiple CSS selectors target the same HTML element, CSS follows a specific priority order called **CSS Specificity**. The browser determines which styles to apply based on this hierarchy:
+
+#### **CSS Specificity Calculation**
+
+CSS specificity is calculated using a four-part value: **(a, b, c, d)**
+
+1. **Inline Styles (a)**: `style=""` attribute = 1000 points
+2. **IDs (b)**: `#id` = 100 points each
+3. **Classes/Attributes/Pseudo-classes (c)**: `.class`, `[attr]`, `:hover` = 10 points each
+4. **Elements/Pseudo-elements (d)**: `div`, `p`, `::before` = 1 point each
+
+#### **Priority Order (Highest to Lowest)**
+
+```css
+/* 1. Inline Styles - 1000 points */
+<div style="color: red;">Highest Priority</div>
+
+/* 2. IDs - 100 points */
+#header { color: blue; }
+
+/* 3. Classes, Attributes, Pseudo-classes - 10 points */
+.navigation { color: green; }
+[type="text"] { color: purple; }
+a:hover { color: orange; }
+
+/* 4. Elements - 1 point */
+div { color: black; }
+p { color: gray; }
+
+/* 5. Universal Selector - 0 points */
+* { color: yellow; }
+```
+
+#### **Specificity Examples**
+
+```css
+/* Specificity: (0, 1, 0, 1) = 101 points */
+#navbar p { color: red; }
+
+/* Specificity: (0, 0, 2, 1) = 21 points */
+.header.active p { color: blue; }
+
+/* Specificity: (0, 0, 1, 2) = 12 points */
+div p.highlight { color: green; }
+
+/* Specificity: (0, 0, 0, 2) = 2 points */
+div p { color: purple; }
+```
+
+**Result**: The first rule wins because 101 > 21 > 12 > 2
+
+#### **Special Cases**
+
+1. **!important Declaration**: Overrides all other rules
+```css
+p { color: red !important; } /* Always wins regardless of specificity */
+```
+
+2. **Source Order**: When specificity is equal, the last rule wins
+```css
+.button { color: red; }
+.button { color: blue; } /* This wins - same specificity, appears later */
+```
+
+3. **Inherited vs Direct Styles**: Direct styles always beat inherited ones
+```css
+/* HTML: <div class="parent"><p class="child">Text</p></div> */
+.parent { color: red; }    /* Inherited */
+p { color: blue; }         /* Direct - wins even with lower specificity */
+```
+
+---
+
+### **Responsive Design in Web Application Development**
+
+#### **🌐 Why is Responsive Design Important?**
+
+Responsive design is crucial in modern web development because:
+
+1. **Multi-Device World**: Users access websites from smartphones, tablets, laptops, desktops, smart TVs, and even smartwatches
+2. **Mobile-First Era**: Over 60% of web traffic comes from mobile devices
+3. **SEO Benefits**: Google prioritizes mobile-friendly websites in search rankings
+4. **User Experience**: Ensures optimal viewing and interaction across all devices
+5. **Cost Efficiency**: One website serves all devices instead of separate mobile/desktop versions
+6. **Future-Proofing**: Adapts to new screen sizes and devices automatically
+
+#### **Examples of Applications**
+
+##### **EXCELLENT Responsive Design Examples:**
+
+**1. GitHub**
+- **Responsive Features**: 
+  - Navigation collapses to hamburger menu on mobile
+  - Code blocks scroll horizontally on small screens
+  - Repository lists stack vertically on mobile
+  - Touch-friendly buttons and links
+- **Why It Works**: Maintains full functionality across all devices while optimizing layout for each screen size
+
+**2. Shopify Admin Dashboard**
+- **Responsive Features**:
+  - Complex data tables become scrollable cards on mobile
+  - Sidebar navigation transforms into bottom tabs
+  - Charts and graphs resize and reformat for mobile viewing
+  - Touch gestures for mobile interactions
+- **Why It Works**: Transforms complex desktop interfaces into mobile-friendly experiences without losing functionality
+
+**3. Airbnb**
+- **Responsive Features**:
+  - Image galleries adapt to screen size
+  - Search filters reorganize for mobile
+  - Maps resize and offer mobile-optimized interactions
+  - Booking forms stack vertically on small screens
+- **Why It Works**: Provides seamless booking experience across all devices with device-specific optimizations
+
+##### **POOR Responsive Design Examples:**
+
+**1. Many Government Websites (e.g., older municipal sites)**
+- **Problems**:
+  - Fixed-width layouts that require horizontal scrolling on mobile
+  - Tiny text that's impossible to read without zooming
+  - Buttons too small for touch interaction
+  - PDF-heavy content that doesn't display well on mobile
+- **Impact**: Citizens can't access important services on mobile devices
+
+**2. Legacy Banking Websites**
+- **Problems**:
+  - Tables with many columns that break on mobile
+  - Complex forms that don't stack properly
+  - Fixed navigation that takes up too much mobile screen space
+  - Touch targets too small for fingers
+- **Impact**: Users can't perform banking tasks on mobile, forcing them to use desktop or visit branches
+
+**3. Older E-commerce Sites**
+- **Problems**:
+  - Product images don't resize properly
+  - Checkout processes break on mobile
+  - Search functionality doesn't work well on touch devices
+  - Cart and wishlist features are unusable on mobile
+- **Impact**: Lost sales and frustrated customers who abandon purchases
+
+#### **Reasons Behind These Examples**
+
+##### **Why Good Examples Succeed:**
+1. **Mobile-First Approach**: Designed for mobile first, then enhanced for larger screens
+2. **Progressive Enhancement**: Core functionality works everywhere, enhanced features added for capable devices
+3. **Touch-Friendly Design**: Buttons, links, and interactive elements sized for fingers
+4. **Content Prioritization**: Most important content shown first on small screens
+5. **Performance Optimization**: Fast loading on slower mobile connections
+
+##### **Why Poor Examples Fail:**
+1. **Desktop-First Mentality**: Designed for desktop, then poorly adapted for mobile
+2. **Fixed-Width Layouts**: Don't adapt to different screen sizes
+3. **Neglected Touch Interactions**: Designed only for mouse/keyboard input
+4. **Content Overcrowding**: Try to fit too much information on small screens
+5. **Legacy Technology**: Built with outdated techniques that don't support responsive design
+
+---
+
+### **Box Model: Margin, Border, and Padding Differences**
+
+The CSS Box Model defines how elements are structured and spaced. Every HTML element is essentially a rectangular box with four main components:
+
+#### **Box Model Components**
+
+```
+┌─────────────── MARGIN ───────────────┐
+│  ┌─────────── BORDER ─────────────┐  │
+│  │  ┌─────── PADDING ───────────┐ │  │
+│  │  │                           │ │  │
+│  │  │        CONTENT            │ │  │
+│  │  │                           │ │  │
+│  │  └───────────────────────────┘ │  │
+│  └────────────────────────────────┘  │
+└──────────────────────────────────────┘
+```
+
+#### **Key Differences**
+
+| Component | Purpose | Visibility | Affects Layout | Background Color |
+|-----------|---------|------------|----------------|------------------|
+| **Content** | Actual text/images | ✅ Visible | ✅ Yes | ✅ Shows |
+| **Padding** | Space inside element | ❌ Transparent | ✅ Yes | ✅ Shows element's background |
+| **Border** | Element boundary | ✅ Visible (if styled) | ✅ Yes | ✅ Has own color/style |
+| **Margin** | Space outside element | ❌ Transparent | ✅ Yes | ❌ No background |
+
+#### **Implementation Examples**
+
+##### **1. Basic Box Model Implementation**
+```css
+.box {
+    /* Content area */
+    width: 200px;
+    height: 100px;
+    
+    /* Padding - space inside the element */
+    padding: 20px;                    /* All sides */
+    padding: 10px 20px;              /* Vertical | Horizontal */
+    padding: 10px 15px 20px 25px;    /* Top | Right | Bottom | Left */
+    
+    /* Border - element boundary */
+    border: 2px solid #333;          /* Width | Style | Color */
+    border-width: 1px 2px 3px 4px;   /* Individual widths */
+    border-style: solid dashed dotted double; /* Individual styles */
+    border-color: red green blue yellow;      /* Individual colors */
+    
+    /* Margin - space outside the element */
+    margin: 15px;                    /* All sides */
+    margin: 10px auto;               /* Vertical | Horizontal (auto centers) */
+    margin: 5px 10px 15px 20px;      /* Top | Right | Bottom | Left */
+}
+```
+
+##### **2. Practical Football Shop Example**
+```css
+/* Product card from our Football Shop */
+.product-card {
+    /* Content dimensions */
+    width: 280px;
+    height: auto;
+    
+    /* Padding - breathing room inside the card */
+    padding: 20px;              /* Space between border and content */
+    
+    /* Border - card boundary with glassmorphism effect */
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 12px;        /* Rounded corners */
+    
+    /* Margin - space between cards */
+    margin: 15px;               /* Space between adjacent cards */
+    margin-bottom: 30px;        /* Extra space below each card */
+    
+    /* Background shows in content and padding areas */
+    background: rgba(255, 255, 255, 0.05);
+}
+
+/* Navigation button example */
+.nav-button {
+    /* Content */
+    width: auto;                /* Fits content */
+    
+    /* Padding - makes button clickable area larger */
+    padding: 12px 24px;         /* Vertical | Horizontal */
+    
+    /* Border - button outline */
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+    
+    /* Margin - space between buttons */
+    margin-right: 10px;         /* Space to the right of each button */
+    
+    /* Background color shows in content and padding */
+    background: rgba(255, 255, 255, 0.1);
+}
+```
+
+##### **3. Box-Sizing Property**
+```css
+/* Default behavior: width/height applies only to content */
+.content-box {
+    box-sizing: content-box;    /* Default */
+    width: 200px;               /* Content width only */
+    padding: 20px;              /* Adds to total width */
+    border: 2px solid black;    /* Adds to total width */
+    /* Total width = 200px + 40px + 4px = 244px */
+}
+
+/* Alternative: width/height includes padding and border */
+.border-box {
+    box-sizing: border-box;     /* More predictable */
+    width: 200px;               /* Total width including padding/border */
+    padding: 20px;              /* Included in width */
+    border: 2px solid black;    /* Included in width */
+    /* Total width = 200px (content adjusts automatically) */
+}
+
+/* Global box-sizing reset (recommended) */
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+```
+
+##### **4. Margin Collapse Example**
+```css
+/* Vertical margins collapse between adjacent elements */
+.section-1 {
+    margin-bottom: 30px;        /* Bottom margin */
+}
+
+.section-2 {
+    margin-top: 20px;           /* Top margin */
+}
+/* Actual space between sections: 30px (not 50px) - larger margin wins */
+
+/* Prevent margin collapse with padding or border */
+.no-collapse {
+    padding-top: 1px;           /* Prevents collapse */
+    /* or */
+    border-top: 1px solid transparent;
+}
+```
+
+#### **Practical Tips for Implementation**
+
+1. **Use Border-Box Sizing**: Makes layout calculations easier
+2. **Margin for Spacing**: Use margins to space elements apart
+3. **Padding for Internal Space**: Use padding to create breathing room inside elements
+4. **Border for Visual Boundaries**: Use borders to define element boundaries
+5. **Consistent Spacing**: Use CSS variables for consistent spacing throughout your design
+
+---
+
+### **Layout Systems: Flexbox and Grid**
+
+Modern CSS provides two powerful layout systems that revolutionized web design: **Flexbox** and **CSS Grid**. Each serves different purposes and excels in different scenarios.
+
+#### **Flexbox (Flexible Box Layout)**
+
+Flexbox is designed for **one-dimensional layouts** - either in a row or column direction.
+
+##### **Core Concepts**
+```css
+/* Container (Parent) Properties */
+.flex-container {
+    display: flex;                    /* Enable flexbox */
+    flex-direction: row;              /* row | column | row-reverse | column-reverse */
+    flex-wrap: nowrap;                /* nowrap | wrap | wrap-reverse */
+    justify-content: flex-start;      /* Main axis alignment */
+    align-items: stretch;             /* Cross axis alignment */
+    align-content: stretch;           /* Multi-line alignment */
+    gap: 10px;                       /* Space between items */
+}
+
+/* Item (Child) Properties */
+.flex-item {
+    flex-grow: 0;                    /* Growth factor */
+    flex-shrink: 1;                  /* Shrink factor */
+    flex-basis: auto;                /* Initial size */
+    flex: 1;                         /* Shorthand: grow shrink basis */
+    align-self: auto;                /* Override parent's align-items */
+    order: 0;                        /* Visual order (doesn't affect HTML) */
+}
+```
+
+##### **Flexbox Use Cases**
+
+**1. Navigation Bar (from our Football Shop)**
+```css
+.navbar {
+    display: flex;
+    justify-content: space-between;   /* Logo left, menu right */
+    align-items: center;              /* Vertically center everything */
+    padding: 15px 30px;
+    gap: 20px;
+}
+
+.navbar-nav {
+    display: flex;
+    gap: 15px;                       /* Space between nav items */
+    align-items: center;
+}
+
+/* Responsive: stack on mobile */
+@media (max-width: 768px) {
+    .navbar {
+        flex-direction: column;       /* Stack vertically */
+        text-align: center;
+    }
+}
+```
+
+**2. Product Actions (Button Group)**
+```css
+.product-actions {
+    display: flex;
+    gap: 8px;                        /* Space between buttons */
+    margin-top: 12px;
+    flex-wrap: wrap;                 /* Wrap to next line if needed */
+}
+
+.btn-glass {
+    flex: 0 0 auto;                  /* Don't grow or shrink */
+}
+```
+
+**3. Form Layout**
+```css
+.form-row {
+    display: flex;
+    align-items: center;             /* Align label and input */
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.form-row label {
+    flex: 0 0 120px;                 /* Fixed width labels */
+}
+
+.form-row input {
+    flex: 1;                         /* Input takes remaining space */
+}
+```
+
+#### **CSS Grid (Grid Layout)**
+
+CSS Grid is designed for **two-dimensional layouts** - handling both rows and columns simultaneously.
+
+##### **Core Concepts**
+```css
+/* Container (Parent) Properties */
+.grid-container {
+    display: grid;
+    
+    /* Define columns and rows */
+    grid-template-columns: 1fr 2fr 1fr;        /* 3 columns with ratios */
+    grid-template-rows: auto 1fr auto;         /* Header, content, footer */
+    
+    /* Shorthand for both */
+    grid-template: 
+        "header header header" auto
+        "sidebar main aside" 1fr
+        "footer footer footer" auto
+        / 200px 1fr 200px;                     /* Column sizes */
+    
+    /* Gaps */
+    gap: 20px;                                 /* Row and column gap */
+    grid-gap: 10px 20px;                       /* Row gap | Column gap */
+    
+    /* Alignment */
+    justify-items: stretch;                     /* Items in their grid areas */
+    align-items: stretch;
+    justify-content: center;                    /* Entire grid */
+    align-content: center;
+}
+
+/* Item (Child) Properties */
+.grid-item {
+    /* Positioning */
+    grid-column: 1 / 3;                        /* Start / End */
+    grid-row: 2 / 4;
+    
+    /* Area naming */
+    grid-area: header;                         /* Use named area */
+    
+    /* Alignment within grid area */
+    justify-self: center;
+    align-self: end;
+}
+```
+
+##### **Grid Use Cases**
+
+**1. Product Grid (from our Football Shop)**
+```css
+.products-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 24px;
+    padding: 20px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .products-grid {
+        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+        gap: 16px;
+    }
+}
+
+@media (max-width: 480px) {
+    .products-grid {
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 12px;
+    }
+}
+```
+
+**2. Dashboard Layout**
+```css
+.dashboard {
+    display: grid;
+    grid-template-areas:
+        "header header header"
+        "sidebar main aside"
+        "footer footer footer";
+    grid-template-rows: 60px 1fr 40px;
+    grid-template-columns: 250px 1fr 200px;
+    min-height: 100vh;
+    gap: 20px;
+}
+
+.header { grid-area: header; }
+.sidebar { grid-area: sidebar; }
+.main { grid-area: main; }
+.aside { grid-area: aside; }
+.footer { grid-area: footer; }
+
+/* Mobile: stack everything */
+@media (max-width: 768px) {
+    .dashboard {
+        grid-template-areas:
+            "header"
+            "main"
+            "sidebar"
+            "aside"
+            "footer";
+        grid-template-columns: 1fr;
+        grid-template-rows: auto;
+    }
+}
+```
+
+**3. Card Internal Layout**
+```css
+.product-card {
+    display: grid;
+    grid-template-rows: 200px 1fr auto;       /* Image, content, actions */
+    height: 100%;
+}
+
+.product-image-container {
+    grid-row: 1;                              /* First row */
+}
+
+.product-content {
+    grid-row: 2;                              /* Second row - grows */
+    padding: 16px;
+}
+
+.product-actions {
+    grid-row: 3;                              /* Third row - fixed */
+    padding: 0 16px 16px;
+}
+```
+
+#### **When to Use Which?**
+
+| Scenario | Use Flexbox | Use Grid |
+|----------|-------------|----------|
+| **Navigation bars** | ✅ Perfect | ❌ Overkill |
+| **Button groups** | ✅ Perfect | ❌ Overkill |
+| **Centering content** | ✅ Excellent | ✅ Also good |
+| **Product catalogs** | ❌ Limited | ✅ Perfect |
+| **Page layouts** | ❌ Difficult | ✅ Excellent |
+| **Form layouts** | ✅ Good | ✅ Also good |
+| **Responsive design** | ✅ Good | ✅ Excellent |
+
+#### **Flexbox + Grid Together**
+```css
+/* Grid for overall page layout */
+.page {
+    display: grid;
+    grid-template-areas:
+        "header"
+        "main"
+        "footer";
+}
+
+/* Flexbox for header navigation */
+.header {
+    grid-area: header;
+    display: flex;                    /* Flex inside grid */
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Grid for main content area */
+.main {
+    grid-area: main;
+    display: grid;                    /* Grid inside grid */
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+/* Flexbox for card content */
+.card {
+    display: flex;                    /* Flex inside grid */
+    flex-direction: column;
+    justify-content: space-between;
+}
+```
+
+This combination gives you the best of both worlds: Grid for complex layouts and Flexbox for simpler component arrangements.
+
+---
+
+### **Implementation Steps: Assignment Checklist Step-by-Step**
+
+This section details how I implemented all the assignment requirements for creating an attractive, responsive Football Shop application.
+
+#### **1. Core Functionality Implementation**
+
+##### **Step 1.1: Delete Product Function**
+```python
+# main/views.py
+def delete_football_item(request, id):
+    # Get the item or return 404 if not found
+    football_item = get_object_or_404(FootballItem, pk=id)
+    
+    # Security check: only item owner can delete
+    if football_item.user != request.user:
+        return HttpResponseForbidden("You don't have permission to delete this item.")
+    
+    # Delete the item
+    football_item.delete()
+    
+    # Redirect back to main page
+    return redirect('main:show_main')
+```
+
+**Key Implementation Details:**
+- Used `get_object_or_404()` for automatic 404 handling
+- Added security check to ensure only owners can delete their items
+- Used `HttpResponseForbidden` for unauthorized access attempts
+- Clean redirect after successful deletion
+
+##### **Step 1.2: Edit Product Function**
+```python
+# main/views.py
+@login_required(login_url='/login')
+def edit_football_item(request, id):
+    # Get the item or return 404
+    football_item = get_object_or_404(FootballItem, pk=id)
+    
+    # Security check: only item owner can edit
+    if football_item.user != request.user:
+        return HttpResponseForbidden("You don't have permission to edit this item.")
+    
+    # Create form with existing data
+    form = FootballItemForm(request.POST or None, instance=football_item)
+    
+    if form.is_valid() and request.method == "POST":
+        form.save()  # Save changes
+        return redirect('main:show_main')
+    
+    context = {'form': form, 'item': football_item}
+    return render(request, 'edit_football_item.html', context)
+```
+
+**Key Implementation Details:**
+- Pre-populated form with existing item data using `instance=football_item`
+- Same security checks as delete function
+- Used `@login_required` decorator for authentication
+- Proper form validation before saving changes
+
+##### **Step 1.3: URL Routing**
+```python
+# main/urls.py
+urlpatterns = [
+    # ... existing URLs ...
+    path('edit_football_item/<int:id>/edit', edit_football_item, name='edit_football_item'),
+    path('delete_football_item/<int:id>/delete', delete_football_item, name='delete_football_item'),
+]
+```
+
+#### **2. Design Customization Implementation**
+
+##### **Step 2.1: Glassmorphism Theme Development**
+
+**Global CSS Framework (`static/css/global.css`):**
+```css
+/* Import modern font */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap');
+
+/* Global reset and base styles */
+*, *:before, *:after {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+/* Dark gradient background */
+body.auth-page {
+    background: linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 50%, #000000 100%);
+    min-height: 100vh;
+    font-family: 'Poppins', sans-serif;
+}
+
+/* Glassmorphism containers */
+.auth-form {
+    background-color: rgba(255,255,255,0.05);
+    backdrop-filter: blur(16px);
+    border: 1px solid rgba(255,255,255,0.1);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+    border-radius: 16px;
+    padding: 50px 35px;
+}
+```
+
+**Why This Approach:**
+- **Modern Aesthetic**: Glassmorphism is trending and looks professional
+- **Accessibility**: High contrast with white text on dark background
+- **Performance**: CSS-only effects, no heavy images
+- **Consistency**: Same theme across all pages
+
+##### **Step 2.2: Login Page Enhancement**
+```html
+<!-- main/templates/login.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Football Shop</title>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/global.css' %}">
+</head>
+<body class="auth-page">
+    <form method="POST" action="" class="auth-form login-form">
+        {% csrf_token %}
+        <h3>Login Here</h3>
+
+        <!-- Enhanced error handling -->
+        {% if messages %}
+        <div class="messages">
+            <ul>
+                {% for message in messages %}
+                <li>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+
+        <!-- Form fields with proper structure -->
+        <div class="form-row">
+            <label for="{{ form.username.id_for_label }}">Username</label>
+            {{ form.username }}
+            {% if form.username.errors %}
+                <div class="field-errors">
+                    {% for error in form.username.errors %}
+                        {{ error }}
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+
+        <input type="submit" value="Log In">
+        
+        <div class="auth-nav-link">
+            Don't have an account yet? <a href="{% url 'main:register' %}">Register Now</a>
+        </div>
+    </form>
+</body>
+</html>
+```
+
+**Enhanced Features:**
+- Glassmorphism form container with blur effects
+- Comprehensive error handling for all form fields
+- Smooth animations and transitions
+- Mobile-responsive design
+- Proper semantic HTML structure
+
+##### **Step 2.3: Product Card Design**
+```css
+/* Product card with glassmorphism */
+.product-card {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    border-radius: 12px;
+    overflow: hidden;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Hover animations */
+.product-card:hover {
+    transform: translateY(-10px) scale(1.02);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    background: rgba(255, 255, 255, 0.08);
+}
+
+/* Image container with overflow handling */
+.product-image-container {
+    position: relative;
+    overflow: hidden;
+    height: 192px;
+}
+
+.product-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.product-card:hover .product-image {
+    transform: scale(1.1);
+}
+```
+
+#### **3. Product Cards with Edit/Delete Buttons**
+
+##### **Step 3.1: Button Implementation**
+```html
+<!-- In main/templates/main.html -->
+<div class="product-actions">
+    <a href="{% url 'main:show_football_item_detail' item.id %}" class="btn-glass btn-small">
+        View Details
+    </a>
+    {% if user.is_authenticated and item.user == user %}
+        <a href="{% url 'main:edit_football_item' item.id %}" class="btn-glass btn-small">
+            Edit
+        </a>
+        <a href="{% url 'main:delete_football_item' item.id %}" class="btn-glass btn-small" 
+           onclick="return confirm('Are you sure you want to delete this item?')">
+            Delete
+        </a>
+    {% endif %}
+</div>
+```
+
+**Key Features:**
+- **Conditional Display**: Edit/Delete buttons only show for item owners
+- **Security**: Server-side validation ensures only owners can modify items
+- **User Confirmation**: JavaScript confirmation for delete action
+- **Consistent Styling**: All buttons use the same glassmorphism theme
+
+##### **Step 3.2: Enhanced Button Animations**
+```css
+/* Enhanced button with microanimations */
+.btn-glass {
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Shimmer effect */
+.btn-glass::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s ease;
+}
+
+.btn-glass:hover::before {
+    left: 100%;
+}
+
+/* Ripple effect on click */
+.btn-glass::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+}
+
+.btn-glass:active::after {
+    width: 300px;
+    height: 300px;
+    transition: width 0s, height 0s;
+}
+```
+
+#### **4. Responsive Navigation Bar Implementation**
+
+##### **Step 4.1: Mobile-First Navbar Structure**
+```html
+<!-- main/templates/navbar.html -->
+<nav class="navbar">
+    <div class="navbar-brand-section">
+        <a href="/" class="navbar-brand">⚽ Football Shop</a>
+    </div>
+    
+    <ul class="navbar-nav">
+        <li><a href="/" class="nav-link">Home</a></li>
+        <li><a href="{% url 'main:create_football_item' %}" class="nav-link primary">+ Add Item</a></li>
+    </ul>
+    
+    <div class="navbar-user-info">
+        {% if user.is_authenticated %}
+            <div class="user-welcome">
+                <span class="user-name">{{ name|default:user.username }}</span>
+                <span class="user-details">{{ npm|default:"Student" }} - {{ class|default:"Class" }}</span>
+            </div>
+            <div class="navbar-actions">
+                <a href="{% url 'main:logout' %}" class="nav-link">Logout</a>
+            </div>
+        {% else %}
+            <div class="navbar-actions">
+                <a href="{% url 'main:login' %}" class="nav-link">Login</a>
+                <a href="{% url 'main:register' %}" class="nav-link primary">Register</a>
+            </div>
+        {% endif %}
+    </div>
+</nav>
+```
+
+##### **Step 4.2: Responsive CSS Implementation**
+```css
+/* Base navbar styles */
+.navbar {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 16px;
+    padding: 15px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+/* Mobile breakpoint - 768px */
+@media (max-width: 768px) {
+    .navbar {
+        padding: 15px 20px;
+        flex-direction: column;    /* Stack vertically */
+        text-align: center;
+        gap: 15px;
+    }
+
+    .navbar-brand {
+        font-size: 1.5rem;        /* Smaller brand text */
+    }
+
+    .navbar-nav {
+        justify-content: center;   /* Center navigation */
+        gap: 10px;
+    }
+
+    .navbar-user-info {
+        flex-direction: column;    /* Stack user info */
+        text-align: center;
+        gap: 10px;
+    }
+}
+
+/* Small mobile breakpoint - 480px */
+@media (max-width: 480px) {
+    .navbar {
+        padding: 12px 15px;
+    }
+
+    .navbar-nav {
+        flex-direction: column;    /* Stack nav items */
+        gap: 8px;
+        width: 100%;
+    }
+
+    .nav-link {
+        width: 100%;              /* Full-width buttons */
+        text-align: center;
+        padding: 10px;
+    }
+
+    .navbar-actions {
+        flex-direction: column;
+        width: 100%;
+        gap: 8px;
+    }
+}
+```
+
+#### **5. Empty State and Error Handling**
+
+##### **Step 5.1: No Products State**
+```html
+<!-- In main/templates/main.html -->
+{% if not football_items %}
+    <div class="empty-state">
+        <h3>No Football Items Yet</h3>
+        <p>Be the first to add a football item to the shop!</p>
+    </div>
+{% else %}
+    <div class="products-grid">
+        {% for item in football_items %}
+            <!-- Product cards -->
+        {% endfor %}
+    </div>
+{% endif %}
+```
+
+```css
+/* Empty state with animation */
+.empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: white;
+    animation: bounceIn 1s ease-out forwards;
+}
+
+@keyframes bounceIn {
+    0% {
+        opacity: 0;
+        transform: scale(0.3);
+    }
+    50% {
+        opacity: 1;
+        transform: scale(1.05);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+```
+
+#### **6. Price Formatting Enhancement**
+
+##### **Step 6.1: Adding Comma Separators**
+```html
+<!-- Updated price display -->
+<div class="product-price">Rp {{ item.price|floatformat:0|intcomma }}</div>
+```
+
+**Implementation Steps:**
+1. Added `{% load humanize %}` to template
+2. Added `django.contrib.humanize` to `INSTALLED_APPS`
+3. Used `|intcomma` filter for thousand separators
+4. Result: 1000 → 1,000, 25000 → 25,000
+
+#### **7. Microanimations Implementation**
+
+##### **Step 7.1: Page Load Animations**
+```css
+/* Staggered product card animations */
+.product-card {
+    animation: fadeInUp 0.6s ease-out forwards;
+}
+
+.product-card:nth-child(1) { animation-delay: 0.1s; opacity: 0; }
+.product-card:nth-child(2) { animation-delay: 0.2s; opacity: 0; }
+.product-card:nth-child(3) { animation-delay: 0.3s; opacity: 0; }
+.product-card:nth-child(4) { animation-delay: 0.4s; opacity: 0; }
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+```
+
+#### **8. Performance Optimizations**
+
+##### **Step 8.1: Mobile Performance**
+```css
+/* Reduced animations on mobile */
+@media (max-width: 768px) {
+    .product-card:hover {
+        transform: translateY(-5px) scale(1.01);  /* Less intensive */
+    }
+    
+    .btn-glass:hover {
+        transform: translateY(-2px);              /* Smaller movement */
+    }
+}
+```
+
+##### **Step 8.2: CSS Optimization**
+```css
+/* Hardware acceleration for smooth animations */
+.product-card, .btn-glass {
+    will-change: transform;
+    transform: translateZ(0);  /* Force GPU acceleration */
+}
+
+/* Efficient transitions */
+.btn-glass {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);  /* Smooth easing */
+}
+```

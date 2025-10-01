@@ -1,0 +1,475 @@
+/* Global CSS for Football Shop */
+/* Glassmorphism Authentication Forms */
+
+/* Import Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap');
+
+/* Global Reset and Base Styles */
+*,
+*:before,
+*:after{
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+body.auth-page{
+    background: linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 50%, #000000 100%);
+    min-height: 100vh;
+    font-family: 'Poppins', sans-serif;
+}
+
+/* Glassmorphism Form Container */
+.auth-form{
+    height: auto;
+    min-height: 520px;
+    width: 400px;
+    background-color: rgba(255,255,255,0.05);
+    position: absolute;
+    transform: translate(-50%,-50%);
+    top: 50%;
+    left: 50%;
+    border-radius: 16px;
+    backdrop-filter: blur(16px);
+    border: 1px solid rgba(255,255,255,0.1);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+    padding: 50px 35px;
+}
+
+.auth-form *{
+    font-family: 'Poppins', sans-serif;
+    color: #ffffff;
+    letter-spacing: 0.5px;
+    outline: none;
+    border: none;
+}
+
+.auth-form h3{
+    font-size: 32px;
+    font-weight: 500;
+    line-height: 42px;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.auth-form label{
+    display: block;
+    margin-top: 20px;
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.auth-form input[type="text"], 
+.auth-form input[type="password"]{
+    display: block;
+    height: 50px;
+    width: 100%;
+    background-color: rgba(255,255,255,0.05);
+    border-radius: 8px;
+    padding: 0 15px;
+    margin-top: 8px;
+    font-size: 14px;
+    font-weight: 300;
+    border: 1px solid rgba(255,255,255,0.1);
+    transition: all 0.3s ease;
+}
+
+.auth-form input[type="text"]:focus, 
+.auth-form input[type="password"]:focus{
+    background-color: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.2);
+    box-shadow: 0 0 0 2px rgba(255, 107, 53, 0.2);
+}
+
+.auth-form ::placeholder{
+    color: #e5e5e5;
+}
+
+.auth-form button, 
+.auth-form input[type="submit"]{
+    margin-top: 30px;
+    width: 100%;
+    background-color: #ffffff;
+    color: #000000;
+    padding: 15px 0;
+    font-size: 18px;
+    font-weight: 600;
+    border-radius: 12px;
+    cursor: pointer;
+    border: none;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 16px rgba(255, 255, 255, 0.1);
+    position: relative;
+    overflow: hidden;
+}
+
+.auth-form button::before, 
+.auth-form input[type="submit"]::before{
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(0, 0, 0, 0.1), transparent);
+    transition: left 0.5s ease;
+}
+
+.auth-form button:hover::before, 
+.auth-form input[type="submit"]:hover::before{
+    left: 100%;
+}
+
+.auth-form button::after, 
+.auth-form input[type="submit"]::after{
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+}
+
+.auth-form button:active::after, 
+.auth-form input[type="submit"]:active::after{
+    width: 300px;
+    height: 300px;
+    transition: width 0s, height 0s;
+}
+
+.auth-form button:hover, 
+.auth-form input[type="submit"]:hover{
+    background-color: #f0f0f0;
+    transform: translateY(-3px);
+    box-shadow: 0 12px 32px rgba(255, 255, 255, 0.2);
+}
+
+.auth-form button:active, 
+.auth-form input[type="submit"]:active{
+    transform: translateY(-1px);
+    transition: transform 0.1s;
+}
+
+.auth-nav-link{
+    text-align: center;
+    margin-top: 20px;
+}
+
+.auth-nav-link a{
+    color: #ff6b35;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    display: inline-block;
+}
+
+.auth-nav-link a::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: #ff8c42;
+    transition: width 0.3s ease;
+}
+
+.auth-nav-link a:hover{
+    color: #ff8c42;
+    transform: translateY(-1px);
+}
+
+.auth-nav-link a:hover::after {
+    width: 100%;
+}
+
+.messages{
+    background-color: rgba(0, 255, 0, 0.1);
+    border: 1px solid rgba(0, 255, 0, 0.3);
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 20px;
+}
+
+.messages ul{
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.messages li{
+    color: #4caf50;
+}
+
+.form-errors{
+    background-color: rgba(255, 0, 0, 0.1);
+    border: 1px solid rgba(255, 0, 0, 0.3);
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 20px;
+}
+
+.form-errors ul{
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.form-errors li{
+    color: #ff6b6b;
+    font-size: 14px;
+    margin-bottom: 5px;
+}
+
+/* Field-specific Error Messages */
+.field-errors{
+    color: #ff6b6b;
+    font-size: 12px;
+    margin-top: 5px;
+}
+
+.form-row{
+    margin-bottom: 15px;
+}
+
+.helptext{
+    font-size: 12px;
+    color: #cccccc;
+    margin-top: 5px;
+}
+
+.auth-form.login-form{
+    min-height: 520px;
+}
+
+.auth-form.login-form .form-row{
+    margin-bottom: 20px;
+}
+
+.auth-form.login-form input[type="submit"]{
+    margin-top: 50px;
+}
+
+.auth-form.register-form{
+    min-height: 600px;
+}
+
+.auth-form.register-form label{
+    margin-top: 20px;
+}
+
+/* ========================================
+   PRODUCT CARD STYLES
+   ======================================== */
+
+/* Product Card Container */
+.product-card {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    border-radius: 12px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+.product-card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 12px 48px rgba(0, 0, 0, 0.6);
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+/* Product Image Container */
+.product-image-container {
+    position: relative;
+    overflow: hidden;
+    height: 192px; /* h-48 equivalent */
+}
+
+.product-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.product-card:hover .product-image {
+    transform: scale(1.1);
+}
+
+/* Discount Badge */
+.discount-badge {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: bold;
+    z-index: 10;
+}
+
+.discount-badge.discount-5 {
+    background-color: #3b82f6; /* blue-500 */
+}
+
+.discount-badge.discount-20,
+.discount-badge.discount-28,
+.discount-badge.discount-32 {
+    background-color: #ef4444; /* red-500 */
+}
+
+.discount-badge.discount-27 {
+    background-color: #f97316; /* orange-500 */
+}
+
+.discount-badge.discount-other {
+    background-color: #8b5cf6; /* purple-500 */
+}
+
+/* Product Badge */
+.product-badge {
+    position: absolute;
+    bottom: 8px;
+    left: 8px;
+    background-color: #ff6b35;
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+/* Product Content */
+.product-content {
+    padding: 16px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.product-title {
+    font-size: 14px;
+    font-weight: 500;
+    color: white;
+    margin-bottom: 8px;
+    line-height: 1.4;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.product-price {
+    font-size: 18px;
+    font-weight: bold;
+    color: white;
+    margin-bottom: 4px;
+}
+
+.product-savings {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.7);
+    margin-bottom: 8px;
+}
+
+/* Rating and Sold Info */
+.product-rating {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-bottom: 8px;
+}
+
+.star-icon {
+    width: 12px;
+    height: 12px;
+    color: #fbbf24; /* yellow-400 */
+    fill: #fbbf24;
+}
+
+.rating-text,
+.sold-text {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+/* Seller Info */
+.seller-info {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.seller-badge {
+    width: 16px;
+    height: 16px;
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.seller-badge::before {
+    content: "✓";
+    font-size: 10px;
+    color: white;
+}
+
+.seller-name {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+/* Product Grid Layout */
+.products-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 24px;
+    padding: 20px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .products-grid {
+        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+        gap: 16px;
+        padding: 16px;
+    }
+    
+    .product-card {
+        border-radius: 8px;
+    }
+    
+    .product-image-container {
+        height: 160px;
+    }
+    
+    .product-content {
+        padding: 12px;
+    }
+}
+
+@media (max-width: 480px) {
+    .products-grid {
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 12px;
+        padding: 12px;
+    }
+    
+    .product-image-container {
+        height: 140px;
+    }
+}
