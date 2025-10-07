@@ -6,6 +6,8 @@
     <title>Football Shop</title>
     {% load static %}
     {% load humanize %}
+    <!-- DOMPurify for XSS Protection -->
+    <script src="https://cdn.jsdelivr.net/npm/dompurify@3.0.5/dist/purify.min.js"></script>
     <link rel="stylesheet" type="text/css" href="{% static 'css/global.css' %}">
     <style>
         /* Main page specific styles */
@@ -424,6 +426,132 @@
             animation: fadeInUp 0.8s ease-out forwards;
         }
  
+        /* State Container Styles */
+        .hidden {
+            display: none !important;
+        }
+
+        .bg-white {
+            background-color: white;
+        }
+
+        .rounded-lg {
+            border-radius: 12px;
+        }
+
+        .border {
+            border-width: 1px;
+        }
+
+        .border-gray-200 {
+            border-color: #e5e7eb;
+        }
+
+        .p-12 {
+            padding: 3rem;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .text-gray-600 {
+            color: #4b5563;
+        }
+
+        .text-gray-800 {
+            color: #1f2937;
+        }
+
+        .text-gray-400 {
+            color: #9ca3af;
+        }
+
+        .text-green-600 {
+            color: #16a34a;
+        }
+
+        .mt-3 {
+            margin-top: 0.75rem;
+        }
+
+        .mb-2 {
+            margin-top: 0.5rem;
+        }
+
+        .mb-4 {
+            margin-bottom: 1rem;
+        }
+
+        .mx-auto {
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .inline-block {
+            display: inline-block;
+        }
+
+        .h-8 {
+            height: 2rem;
+        }
+
+        .w-8 {
+            width: 2rem;
+        }
+
+        .h-32 {
+            height: 8rem;
+        }
+
+        .w-32 {
+            width: 8rem;
+        }
+
+        .w-full {
+            width: 100%;
+        }
+
+        .h-full {
+            height: 100%;
+        }
+
+        .text-xl {
+            font-size: 1.25rem;
+            line-height: 1.75rem;
+        }
+
+        .font-semibold {
+            font-weight: 600;
+        }
+
+        /* Spinner Animation */
+        @keyframes spin {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .animate-spin {
+            animation: spin 1s linear infinite;
+        }
+
+        /* Refresh button styles */
+        #refreshButton {
+            transition: all 0.3s ease;
+        }
+
+        #refreshButton:hover {
+            transform: translateY(-2px);
+        }
+
+        #refreshButton:active #refreshIcon {
+            animation: spin 0.5s linear;
+        }
+
         /* Responsive Design */
         @media (max-width: 768px) {
             .main-container {
@@ -463,7 +591,53 @@
         <!-- Navigation Bar -->
         {% include 'navbar.html' %}
 
-        <!-- Products Section -->
+        <!-- Action Buttons -->
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; gap: 15px; flex-wrap: wrap;">
+            <!-- Add New Item Button -->
+            <button onclick="openCreateModal()" class="btn-glass primary" style="position: relative;">
+                <svg style="width: 20px; height: 20px; display: inline-block; vertical-align: middle; margin-right: 8px;" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                </svg>
+                Add New Item
+            </button>
+
+            <!-- Refresh Button -->
+            <button id="refreshButton" class="btn-glass" onclick="refreshFootballItems()" style="position: relative;">
+                <svg id="refreshIcon" style="width: 20px; height: 20px; display: inline-block; vertical-align: middle; margin-right: 8px;" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                </svg>
+                Refresh Items
+            </button>
+        </div>
+
+        <!-- Loading State -->
+        <div id="loading" class="bg-white rounded-lg border border-gray-200 p-12 text-center hidden">
+            <svg class="animate-spin h-8 w-8 text-green-600 inline-block" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
+            </svg>
+            <p class="text-gray-600 mt-3">Loading items...</p>
+        </div>
+
+        <!-- Error State -->
+        <div id="error" class="hidden"></div>
+
+        <!-- Items Grid -->
+        <div id="grid" class="hidden"></div>
+
+        <!-- Empty State -->
+        <div id="empty" class="bg-white rounded-lg border border-gray-200 p-12 text-center hidden">
+            <div class="w-32 h-32 mx-auto mb-4">
+                <svg class="w-full h-full text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"></path>
+                </svg>
+            </div>
+            <h3 class="text-xl font-semibold text-gray-800 mb-2">No Items Available</h3>
+            <p class="text-gray-600">There are no football items to display at the moment.</p>
+        </div>
+
+        <!-- Products Section (Server-side rendered fallback - only shown if JS is disabled) -->
+        <noscript>
         {% if not football_items %}
             <div class="empty-state">
                 <h3>No Football Items Yet</h3>
@@ -526,11 +700,353 @@
                                 </a>
                             {% endif %}
                         </div>
+
+                        
                     </div>
                 </div>
                 {% endfor %}
             </div>
         {% endif %}
+        </noscript>
     </div>
+
+    <script>
+        // Get CSRF token for AJAX requests
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+        const csrftoken = getCookie('csrftoken');
+
+        // Format price with thousand separators
+        function formatPrice(price) {
+            return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        }
+
+        // Format date
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            const options = { day: 'numeric', month: 'short', year: 'numeric' };
+            return date.toLocaleDateString('en-US', options);
+        }
+
+        // Show/hide state containers
+        function hideAllStates() {
+            document.getElementById('loading').classList.add('hidden');
+            document.getElementById('error').classList.add('hidden');
+            document.getElementById('empty').classList.add('hidden');
+            document.getElementById('grid').classList.add('hidden');
+        }
+
+        function showLoading() {
+            hideAllStates();
+            document.getElementById('loading').classList.remove('hidden');
+        }
+
+        function showError(message) {
+            hideAllStates();
+            const errorDiv = document.getElementById('error');
+            errorDiv.innerHTML = `
+                <div style="background: #fee2e2; border: 1px solid #ef4444; color: #991b1b; padding: 1rem; border-radius: 0.75rem; text-align: center; margin-bottom: 20px;">
+                    <strong>Error:</strong> ${message}
+                </div>
+            `;
+            errorDiv.classList.remove('hidden');
+        }
+
+        function showEmpty() {
+            hideAllStates();
+            document.getElementById('empty').classList.remove('hidden');
+        }
+
+        function showGrid() {
+            hideAllStates();
+            document.getElementById('grid').classList.remove('hidden');
+        }
+
+        // Render football items
+        function renderFootballItems(items) {
+            const grid = document.getElementById('grid');
+            const currentUserId = {{ user.id|default:"null" }};
+            const currentUsername = "{{ user.username|escapejs }}";
+            
+            if (items.length === 0) {
+                showEmpty();
+                return;
+            }
+
+            let html = '<div class="products-grid">';
+            
+            items.forEach((item, index) => {
+                // Sanitize all user-provided data with DOMPurify
+                const sanitizedName = DOMPurify.sanitize(item.name);
+                const sanitizedDescription = DOMPurify.sanitize(item.description || '');
+                const sanitizedCategory = DOMPurify.sanitize(item.category);
+                const sanitizedBrand = DOMPurify.sanitize(item.brand || '');
+                const sanitizedThumbnail = DOMPurify.sanitize(item.thumbnail || '');
+                const sanitizedUsername = DOMPurify.sanitize(item.user.username);
+                const sanitizedPrice = DOMPurify.sanitize(formatPrice(item.price));
+                
+                const animationDelay = `animation-delay: ${index * 0.1}s; opacity: 0;`;
+                
+                html += `
+                <div class="product-card" style="${animationDelay}">
+                    <div class="product-image-container">
+                        ${item.is_featured ? '<div class="discount-badge discount-other">Featured</div>' : ''}
+                        
+                        ${sanitizedThumbnail ? 
+                            `<img src="${sanitizedThumbnail}" alt="${sanitizedName}" class="product-image">` :
+                            `<div class="product-image" style="background: linear-gradient(45deg, #333333, #1a1a1a); display: flex; align-items: center; justify-content: center; color: white; font-size: 18px;">
+                                ⚽ ${sanitizedCategory}
+                            </div>`
+                        }
+                        
+                        ${sanitizedBrand ? `<div class="product-badge">${sanitizedBrand}</div>` : ''}
+                    </div>
+                    
+                    <div class="product-content">
+                        <h3 class="product-title">
+                            <a href="/football_item/${item.id}/" style="color: white; text-decoration: none;">
+                                ${sanitizedName}
+                            </a>
+                        </h3>
+                        
+                        <div class="product-price">Rp ${sanitizedPrice}</div>
+                        
+                        <div class="product-savings">${sanitizedCategory}</div>
+                        
+                        <div class="product-rating">
+                            <span class="rating-text">New</span>
+                            <span class="sold-text">• ${formatDate(item.created_at)}</span>
+                        </div>
+                        
+                        <div class="seller-info">
+                            <div class="seller-badge"></div>
+                            <span class="seller-name">${sanitizedUsername}</span>
+                        </div>
+                        
+                        <div class="product-actions">
+                            <a href="/football_item/${item.id}/" class="btn-glass btn-small">
+                                View Details
+                            </a>
+                            ${item.user.id === currentUserId ? `
+                                <button onclick='openEditModal(${item.id}, ${JSON.stringify(item).replace(/'/g, "&#39;")})' class="btn-glass btn-small">
+                                    Edit
+                                </button>
+                                <button onclick='openDeleteModal(${item.id}, "${DOMPurify.sanitize(item.name).replace(/"/g, "&quot;")}")' class="btn-glass btn-small">
+                                    Delete
+                                </button>
+                            ` : ''}
+                        </div>
+                    </div>
+                </div>
+                `;
+            });
+            
+            html += '</div>';
+            grid.innerHTML = html;
+            showGrid();
+        }
+
+        // Fetch football items
+        async function fetchFootballItems(filter = 'all') {
+            showLoading();
+            
+            // Add spinning animation to refresh button
+            const refreshIcon = document.getElementById('refreshIcon');
+            if (refreshIcon) {
+                refreshIcon.style.animation = 'spin 1s linear infinite';
+            }
+            
+            try {
+                const response = await fetch(`/json/?filter=${filter}`);
+                if (!response.ok) {
+                    throw new Error('Failed to fetch items');
+                }
+                const items = await response.json();
+                renderFootballItems(items);
+            } catch (error) {
+                console.error('Error fetching items:', error);
+                showError('Failed to load football items. Please try again.');
+            } finally {
+                // Remove spinning animation from refresh button
+                if (refreshIcon) {
+                    refreshIcon.style.animation = '';
+                }
+            }
+        }
+
+        // Refresh function (can be called from onclick)
+        function refreshFootballItems() {
+            fetchFootballItems();
+        }
+
+        // Delete item via AJAX
+        async function deleteFootballItemAjax(itemId) {
+            showLoading();
+            
+            try {
+                const response = await fetch(`/api/delete/${itemId}/`, {
+                    method: 'DELETE',
+                    headers: {
+                        'X-CSRFToken': csrftoken,
+                    },
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    // Show success toast
+                    if (typeof toastSuccess === 'function') {
+                        toastSuccess('Item Deleted!', data.message || 'Football item has been deleted successfully');
+                    }
+                    // Refresh the list
+                    await fetchFootballItems();
+                } else {
+                    // Show error toast
+                    if (typeof toastError === 'function') {
+                        toastError('Delete Failed!', data.message || 'Failed to delete item');
+                    }
+                    showError(data.message || 'Failed to delete item');
+                }
+            } catch (error) {
+                console.error('Error deleting item:', error);
+                if (typeof toastError === 'function') {
+                    toastError('Error!', 'Failed to delete item. Please try again.');
+                }
+                showError('Failed to delete item. Please try again.');
+            }
+        }
+
+        // Load items when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            // Load items dynamically on page load
+            fetchFootballItems();
+        });
+
+        // Create item via AJAX (for use in modals)
+        async function createFootballItemAjax(formData) {
+            showLoading();
+            
+            try {
+                const response = await fetch('/api/create/', {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': csrftoken,
+                    },
+                    body: formData,
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    console.log(data.message);
+                    // Refresh the list
+                    await fetchFootballItems();
+                    return { success: true, data: data };
+                } else {
+                    showError(data.message || 'Failed to create item');
+                    return { success: false, errors: data.errors };
+                }
+            } catch (error) {
+                console.error('Error creating item:', error);
+                showError('Failed to create item. Please try again.');
+                return { success: false, error: error.message };
+            }
+        }
+
+        // Edit item via AJAX (for use in modals)
+        async function editFootballItemAjax(itemId, formData) {
+            showLoading();
+            
+            try {
+                const response = await fetch(`/api/edit/${itemId}/`, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': csrftoken,
+                    },
+                    body: formData,
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    console.log(data.message);
+                    // Refresh the list
+                    await fetchFootballItems();
+                    return { success: true, data: data };
+                } else {
+                    showError(data.message || 'Failed to update item');
+                    return { success: false, errors: data.errors };
+                }
+            } catch (error) {
+                console.error('Error updating item:', error);
+                showError('Failed to update item. Please try again.');
+                return { success: false, error: error.message };
+            }
+        }
+
+        // Export functions to global scope for use in modals
+        window.refreshFootballItems = refreshFootballItems;
+        window.deleteFootballItemAjax = deleteFootballItemAjax;
+        window.fetchFootballItems = fetchFootballItems;
+        window.createFootballItemAjax = createFootballItemAjax;
+        window.editFootballItemAjax = editFootballItemAjax;
+    </script>
+
+    <!-- 
+    USAGE GUIDE FOR MODALS:
+
+    1. CREATE ITEM FROM MODAL:
+       In your modal form submission handler:
+       
+       const form = document.getElementById('createItemForm');
+       const formData = new FormData(form);
+       const result = await createFootballItemAjax(formData);
+       
+       if (result.success) {
+           // Close modal
+           // Show success message
+       }
+
+    2. EDIT ITEM FROM MODAL:
+       In your modal form submission handler:
+       
+       const itemId = 123; // Get from somewhere
+       const form = document.getElementById('editItemForm');
+       const formData = new FormData(form);
+       const result = await editFootballItemAjax(itemId, formData);
+       
+       if (result.success) {
+           // Close modal
+           // Show success message
+       }
+
+    3. DELETE ITEM:
+       Simply call: deleteFootballItemAjax(itemId)
+       The function already handles confirmation and refresh
+
+    4. REFRESH LIST:
+       Call: refreshFootballItems()
+       Or: fetchFootballItems('all') or fetchFootballItems('my')
+
+    The list will automatically refresh after any create/update/delete operation!
+    -->
+
+    <!-- Include Modal Components -->
+    {% include 'modal.html' %}
+
+    <!-- Include Toast Notifications -->
+    {% include 'toast.html' %}
 </body>
 </html>

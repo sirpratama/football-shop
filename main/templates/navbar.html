@@ -332,7 +332,7 @@
                 <span class="user-details">{{ npm|default:"Student" }} - {{ class|default:"Class" }}</span>
             </div>
             <div class="navbar-actions">
-                <a href="{% url 'main:logout' %}" class="nav-link">Logout</a>
+                <a href="#" onclick="handleLogout(event)" class="nav-link">Logout</a>
             </div>
     {% else %}
             <div class="navbar-actions">
@@ -358,7 +358,7 @@
                     <span class="user-details">{{ npm|default:"Student" }} - {{ class|default:"Class" }}</span>
                 </div>
                 <div class="mobile-user-actions">
-                    <a href="{% url 'main:logout' %}" class="nav-link">Logout</a>
+                    <a href="#" onclick="handleLogout(event)" class="nav-link">Logout</a>
       </div>
     {% else %}
                 <div class="mobile-user-actions">
@@ -400,4 +400,18 @@ window.addEventListener('resize', function() {
         mobileMenu.classList.remove('active');
     }
 });
+function handleLogout(event) {
+    event.preventDefault();
+    
+    // Show toast notification
+    if (typeof toastInfo === 'function') {
+        toastInfo('Goodbye!', 'Logging you out...');
+        setTimeout(() => {
+            window.location.href = "{% url 'main:logout' %}";
+        }, 800);
+    } else {
+        window.location.href = "{% url 'main:logout' %}";
+    }
+}
 </script>
+
