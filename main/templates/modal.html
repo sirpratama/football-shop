@@ -1,0 +1,649 @@
+<!-- Modal Styles -->
+<style>
+    /* Modal Overlay */
+    .modal-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.7);
+        backdrop-filter: blur(5px);
+        z-index: 1000;
+        animation: fadeIn 0.3s ease-out;
+    }
+
+    .modal-overlay.active {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    /* Modal Container */
+    .modal-container {
+        background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+        border-radius: 16px;
+        padding: 30px;
+        max-width: 600px;
+        width: 90%;
+        max-height: 90vh;
+        overflow-y: auto;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        animation: slideUp 0.3s ease-out;
+        position: relative;
+    }
+
+    /* Modal Header */
+    .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 25px;
+        padding-bottom: 15px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .modal-title {
+        color: white;
+        font-size: 1.5rem;
+        font-weight: 600;
+        margin: 0;
+    }
+
+    .modal-close {
+        background: none;
+        border: none;
+        color: white;
+        font-size: 24px;
+        cursor: pointer;
+        padding: 5px 10px;
+        transition: all 0.3s ease;
+        border-radius: 8px;
+    }
+
+    .modal-close:hover {
+        background: rgba(255, 255, 255, 0.1);
+        transform: rotate(90deg);
+    }
+
+    /* Modal Body */
+    .modal-body {
+        color: white;
+    }
+
+    /* Modal Form */
+    .modal-form {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .form-group {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .form-group label {
+        color: rgba(255, 255, 255, 0.9);
+        font-weight: 500;
+        font-size: 14px;
+    }
+
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 8px;
+        padding: 12px;
+        color: white;
+        font-size: 14px;
+        font-family: 'Poppins', sans-serif;
+        transition: all 0.3s ease;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus,
+    .form-group select:focus {
+        outline: none;
+        border-color: rgba(255, 107, 53, 0.8);
+        background: rgba(255, 255, 255, 0.08);
+    }
+
+    .form-group textarea {
+        resize: vertical;
+        min-height: 100px;
+    }
+
+    .form-group .error-message {
+        color: #ff6b6b;
+        font-size: 12px;
+        margin-top: -5px;
+    }
+
+    /* Modal Footer */
+    .modal-footer {
+        display: flex;
+        gap: 10px;
+        justify-content: flex-end;
+        margin-top: 25px;
+        padding-top: 20px;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .modal-btn {
+        padding: 12px 24px;
+        border: none;
+        border-radius: 8px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-family: 'Poppins', sans-serif;
+        font-size: 14px;
+    }
+
+    .modal-btn-cancel {
+        background: rgba(255, 255, 255, 0.1);
+        color: white;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .modal-btn-cancel:hover {
+        background: rgba(255, 255, 255, 0.15);
+    }
+
+    .modal-btn-submit {
+        background: rgba(255, 107, 53, 0.8);
+        color: white;
+        border: 1px solid rgba(255, 107, 53, 0.3);
+    }
+
+    .modal-btn-submit:hover {
+        background: rgba(255, 107, 53, 0.9);
+        box-shadow: 0 4px 12px rgba(255, 107, 53, 0.4);
+    }
+
+    .modal-btn-submit:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+
+    .modal-btn-delete {
+        background: rgba(239, 68, 68, 0.8);
+        color: white;
+        border: 1px solid rgba(239, 68, 68, 0.3);
+    }
+
+    .modal-btn-delete:hover {
+        background: rgba(239, 68, 68, 0.9);
+        box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
+    }
+
+    /* Delete Modal Specific */
+    .delete-modal-content {
+        text-align: center;
+        padding: 20px 0;
+    }
+
+    .delete-icon {
+        width: 80px;
+        height: 80px;
+        margin: 0 auto 20px;
+        background: rgba(239, 68, 68, 0.1);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .delete-icon svg {
+        width: 40px;
+        height: 40px;
+        color: #ef4444;
+    }
+
+    .delete-modal-title {
+        font-size: 1.25rem;
+        margin-bottom: 10px;
+        color: white;
+    }
+
+    .delete-modal-message {
+        color: rgba(255, 255, 255, 0.7);
+        margin-bottom: 20px;
+    }
+
+    /* Animations */
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+
+    @keyframes slideUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Loading State */
+    .loading-spinner {
+        display: inline-block;
+        width: 16px;
+        height: 16px;
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        border-top-color: white;
+        border-radius: 50%;
+        animation: spin 0.6s linear infinite;
+        margin-right: 8px;
+    }
+
+    /* Success Message */
+    .modal-success {
+        background: rgba(34, 197, 94, 0.1);
+        border: 1px solid rgba(34, 197, 94, 0.3);
+        color: #22c55e;
+        padding: 12px;
+        border-radius: 8px;
+        margin-bottom: 15px;
+        display: none;
+    }
+
+    .modal-error {
+        background: rgba(239, 68, 68, 0.1);
+        border: 1px solid rgba(239, 68, 68, 0.3);
+        color: #ef4444;
+        padding: 12px;
+        border-radius: 8px;
+        margin-bottom: 15px;
+        display: none;
+    }
+</style>
+
+<!-- CREATE MODAL -->
+<div id="createModal" class="modal-overlay">
+    <div class="modal-container">
+        <div class="modal-header">
+            <h2 class="modal-title">Add New Football Item</h2>
+            <button class="modal-close" onclick="closeCreateModal()">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div id="createSuccessMessage" class="modal-success"></div>
+            <div id="createErrorMessage" class="modal-error"></div>
+            
+            <form id="createForm" class="modal-form">
+                {% csrf_token %}
+                
+                <div class="form-group">
+                    <label for="create_name">Item Name *</label>
+                    <input type="text" id="create_name" name="name" required placeholder="e.g., Nike Mercurial">
+                    <span class="error-message" id="create_name_error"></span>
+                </div>
+
+                <div class="form-group">
+                    <label for="create_price">Price (Rp) *</label>
+                    <input type="number" id="create_price" name="price" required placeholder="e.g., 1500000" min="0">
+                    <span class="error-message" id="create_price_error"></span>
+                </div>
+
+                <div class="form-group">
+                    <label for="create_category">Category *</label>
+                    <select id="create_category" name="category" required>
+                        <option value="">Select Category</option>
+                        <option value="Boots">Boots</option>
+                        <option value="Jersey">Jersey</option>
+                        <option value="Ball">Ball</option>
+                        <option value="Gloves">Gloves</option>
+                        <option value="Shin Guards">Shin Guards</option>
+                        <option value="Training Equipment">Training Equipment</option>
+                        <option value="Other">Other</option>
+                    </select>
+                    <span class="error-message" id="create_category_error"></span>
+                </div>
+
+                <div class="form-group">
+                    <label for="create_brand">Brand</label>
+                    <input type="text" id="create_brand" name="brand" placeholder="e.g., Nike, Adidas">
+                    <span class="error-message" id="create_brand_error"></span>
+                </div>
+
+                <div class="form-group">
+                    <label for="create_description">Description *</label>
+                    <textarea id="create_description" name="description" required placeholder="Describe the item..."></textarea>
+                    <span class="error-message" id="create_description_error"></span>
+                </div>
+
+                <div class="form-group">
+                    <label for="create_thumbnail">Image URL *</label>
+                    <input type="url" id="create_thumbnail" name="thumbnail" required placeholder="https://example.com/image.jpg">
+                    <span class="error-message" id="create_thumbnail_error"></span>
+                </div>
+
+                <div class="form-group">
+                    <label for="create_stock">Stock Quantity</label>
+                    <input type="number" id="create_stock" name="stock" placeholder="0" min="0" value="0">
+                    <span class="error-message" id="create_stock_error"></span>
+                </div>
+
+                <div class="form-group">
+                    <label for="create_size">Size</label>
+                    <input type="text" id="create_size" name="size" placeholder="e.g., 42, L, XL">
+                    <span class="error-message" id="create_size_error"></span>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="modal-btn modal-btn-cancel" onclick="closeCreateModal()">Cancel</button>
+            <button type="submit" form="createForm" class="modal-btn modal-btn-submit" id="createSubmitBtn">
+                Create Item
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- EDIT MODAL -->
+<div id="editModal" class="modal-overlay">
+    <div class="modal-container">
+        <div class="modal-header">
+            <h2 class="modal-title">Edit Football Item</h2>
+            <button class="modal-close" onclick="closeEditModal()">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div id="editSuccessMessage" class="modal-success"></div>
+            <div id="editErrorMessage" class="modal-error"></div>
+            
+            <form id="editForm" class="modal-form">
+                {% csrf_token %}
+                <input type="hidden" id="edit_item_id" name="item_id">
+                
+                <div class="form-group">
+                    <label for="edit_name">Item Name *</label>
+                    <input type="text" id="edit_name" name="name" required>
+                    <span class="error-message" id="edit_name_error"></span>
+                </div>
+
+                <div class="form-group">
+                    <label for="edit_price">Price (Rp) *</label>
+                    <input type="number" id="edit_price" name="price" required min="0">
+                    <span class="error-message" id="edit_price_error"></span>
+                </div>
+
+                <div class="form-group">
+                    <label for="edit_category">Category *</label>
+                    <select id="edit_category" name="category" required>
+                        <option value="">Select Category</option>
+                        <option value="Boots">Boots</option>
+                        <option value="Jersey">Jersey</option>
+                        <option value="Ball">Ball</option>
+                        <option value="Gloves">Gloves</option>
+                        <option value="Shin Guards">Shin Guards</option>
+                        <option value="Training Equipment">Training Equipment</option>
+                        <option value="Other">Other</option>
+                    </select>
+                    <span class="error-message" id="edit_category_error"></span>
+                </div>
+
+                <div class="form-group">
+                    <label for="edit_brand">Brand</label>
+                    <input type="text" id="edit_brand" name="brand">
+                    <span class="error-message" id="edit_brand_error"></span>
+                </div>
+
+                <div class="form-group">
+                    <label for="edit_description">Description *</label>
+                    <textarea id="edit_description" name="description" required></textarea>
+                    <span class="error-message" id="edit_description_error"></span>
+                </div>
+
+                <div class="form-group">
+                    <label for="edit_thumbnail">Image URL *</label>
+                    <input type="url" id="edit_thumbnail" name="thumbnail" required>
+                    <span class="error-message" id="edit_thumbnail_error"></span>
+                </div>
+
+                <div class="form-group">
+                    <label for="edit_stock">Stock Quantity</label>
+                    <input type="number" id="edit_stock" name="stock" min="0">
+                    <span class="error-message" id="edit_stock_error"></span>
+                </div>
+
+                <div class="form-group">
+                    <label for="edit_size">Size</label>
+                    <input type="text" id="edit_size" name="size">
+                    <span class="error-message" id="edit_size_error"></span>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="modal-btn modal-btn-cancel" onclick="closeEditModal()">Cancel</button>
+            <button type="submit" form="editForm" class="modal-btn modal-btn-submit" id="editSubmitBtn">
+                Update Item
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- DELETE CONFIRMATION MODAL -->
+<div id="deleteModal" class="modal-overlay">
+    <div class="modal-container" style="max-width: 400px;">
+        <div class="modal-header">
+            <h2 class="modal-title">Confirm Deletion</h2>
+            <button class="modal-close" onclick="closeDeleteModal()">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div class="delete-modal-content">
+                <div class="delete-icon">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                    </svg>
+                </div>
+                <h3 class="delete-modal-title">Are you sure?</h3>
+                <p class="delete-modal-message" id="deleteMessage">
+                    Do you really want to delete this item? This action cannot be undone.
+                </p>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="modal-btn modal-btn-cancel" onclick="closeDeleteModal()">Cancel</button>
+            <button type="button" class="modal-btn modal-btn-delete" id="confirmDeleteBtn" onclick="confirmDelete()">
+                Delete Item
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal JavaScript -->
+<script>
+    let currentDeleteItemId = null;
+
+    // CREATE MODAL FUNCTIONS
+    function openCreateModal() {
+        document.getElementById('createModal').classList.add('active');
+        document.getElementById('createForm').reset();
+        clearCreateErrors();
+    }
+
+    function closeCreateModal() {
+        document.getElementById('createModal').classList.remove('active');
+        document.getElementById('createForm').reset();
+        clearCreateErrors();
+    }
+
+    function clearCreateErrors() {
+        document.getElementById('createSuccessMessage').style.display = 'none';
+        document.getElementById('createErrorMessage').style.display = 'none';
+        const errorElements = document.querySelectorAll('#createForm .error-message');
+        errorElements.forEach(el => el.textContent = '');
+    }
+
+    // EDIT MODAL FUNCTIONS
+    function openEditModal(itemId, itemData) {
+        document.getElementById('editModal').classList.add('active');
+        document.getElementById('edit_item_id').value = itemId;
+        
+        // Populate form with item data
+        document.getElementById('edit_name').value = itemData.name || '';
+        document.getElementById('edit_price').value = itemData.price || '';
+        document.getElementById('edit_category').value = itemData.category || '';
+        document.getElementById('edit_brand').value = itemData.brand || '';
+        document.getElementById('edit_description').value = itemData.description || '';
+        document.getElementById('edit_thumbnail').value = itemData.thumbnail || '';
+        document.getElementById('edit_stock').value = itemData.stock || 0;
+        document.getElementById('edit_size').value = itemData.size || '';
+        
+        clearEditErrors();
+    }
+
+    function closeEditModal() {
+        document.getElementById('editModal').classList.remove('active');
+        document.getElementById('editForm').reset();
+        clearEditErrors();
+    }
+
+    function clearEditErrors() {
+        document.getElementById('editSuccessMessage').style.display = 'none';
+        document.getElementById('editErrorMessage').style.display = 'none';
+        const errorElements = document.querySelectorAll('#editForm .error-message');
+        errorElements.forEach(el => el.textContent = '');
+    }
+
+    // DELETE MODAL FUNCTIONS
+    function openDeleteModal(itemId, itemName) {
+        currentDeleteItemId = itemId;
+        document.getElementById('deleteMessage').textContent = 
+            `Do you really want to delete "${itemName}"? This action cannot be undone.`;
+        document.getElementById('deleteModal').classList.add('active');
+    }
+
+    function closeDeleteModal() {
+        document.getElementById('deleteModal').classList.remove('active');
+        currentDeleteItemId = null;
+    }
+
+    function confirmDelete() {
+        if (currentDeleteItemId) {
+            deleteFootballItemAjax(currentDeleteItemId);
+            closeDeleteModal();
+        }
+    }
+
+    // Close modals when clicking outside
+    document.addEventListener('click', function(event) {
+        if (event.target.classList.contains('modal-overlay')) {
+            closeCreateModal();
+            closeEditModal();
+            closeDeleteModal();
+        }
+    });
+
+    // Close modals with Escape key
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'Escape') {
+            closeCreateModal();
+            closeEditModal();
+            closeDeleteModal();
+        }
+    });
+
+    // CREATE FORM SUBMISSION
+    document.getElementById('createForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        clearCreateErrors();
+        
+        const submitBtn = document.getElementById('createSubmitBtn');
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<span class="loading-spinner"></span>Creating...';
+        
+        const formData = new FormData(this);
+        
+        try {
+            const result = await createFootballItemAjax(formData);
+            
+            if (result.success) {
+                // Show toast notification
+                toastSuccess('Item Created!', result.data.message || 'Football item has been created successfully');
+                
+                // Close modal immediately
+                closeCreateModal();
+            } else {
+                // Show errors
+                toastError('Creation Failed', result.errors?.message || 'Failed to create item');
+                document.getElementById('createErrorMessage').textContent = result.errors?.message || 'Failed to create item';
+                document.getElementById('createErrorMessage').style.display = 'block';
+                
+                // Show field-specific errors
+                if (result.errors && typeof result.errors === 'object') {
+                    for (const [field, errors] of Object.entries(result.errors)) {
+                        const errorEl = document.getElementById(`create_${field}_error`);
+                        if (errorEl && Array.isArray(errors)) {
+                            errorEl.textContent = errors.join(', ');
+                        }
+                    }
+                }
+            }
+        } catch (error) {
+            console.error('Create error:', error);
+            document.getElementById('createErrorMessage').textContent = 'An error occurred. Please try again.';
+            document.getElementById('createErrorMessage').style.display = 'block';
+        } finally {
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = 'Create Item';
+        }
+    });
+
+    // EDIT FORM SUBMISSION
+    document.getElementById('editForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        clearEditErrors();
+        
+        const submitBtn = document.getElementById('editSubmitBtn');
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<span class="loading-spinner"></span>Updating...';
+        
+        const formData = new FormData(this);
+        const itemId = document.getElementById('edit_item_id').value;
+        
+        try {
+            const result = await editFootballItemAjax(itemId, formData);
+            
+            if (result.success) {
+                // Show toast notification
+                toastSuccess('Item Updated!', result.data.message || 'Football item has been updated successfully');
+                
+                // Close modal immediately
+                closeEditModal();
+            } else {
+                // Show errors
+                toastError('Update Failed', result.errors?.message || 'Failed to update item');
+                document.getElementById('editErrorMessage').textContent = result.errors?.message || 'Failed to update item';
+                document.getElementById('editErrorMessage').style.display = 'block';
+                
+                // Show field-specific errors
+                if (result.errors && typeof result.errors === 'object') {
+                    for (const [field, errors] of Object.entries(result.errors)) {
+                        const errorEl = document.getElementById(`edit_${field}_error`);
+                        if (errorEl && Array.isArray(errors)) {
+                            errorEl.textContent = errors.join(', ');
+                        }
+                    }
+                }
+            }
+        } catch (error) {
+            console.error('Update error:', error);
+            document.getElementById('editErrorMessage').textContent = 'An error occurred. Please try again.';
+            document.getElementById('editErrorMessage').style.display = 'block';
+        } finally {
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = 'Update Item';
+        }
+    });
+</script>
