@@ -2619,3 +2619,22 @@ This gives you the best of both worlds: SEO-friendly initial load with dynamic, 
 #### 4. **Enhanced User Engagement**
 - Smooth interactions (e.g., updating a shopping cart without refreshing the page) keep users engaged.
 - Better continuity improves user satisfaction.
+
+---
+
+### ❌ Negative Effects
+
+#### 1. **Navigation Issues**
+- AJAX can break the browser’s back/forward buttons if not handled correctly.
+- Users may lose the ability to bookmark or share a specific state of the page.
+
+#### 2. **Accessibility Concerns**
+- Screen readers may not detect dynamically updated content unless ARIA roles and proper semantics are used.
+
+#### 3. **SEO Challenges**
+- Content loaded via AJAX may not be indexed properly by search engines unless implemented with SEO-friendly practices.
+
+#### 4. **Error Handling**
+- Poor error handling in AJAX requests can leave users confused if content fails to load without feedback.
+
+---
