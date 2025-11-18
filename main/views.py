@@ -68,29 +68,39 @@ def show_xml(request):
     xml_data = serializers.serialize("xml", data)
     return HttpResponse(xml_data, content_type="application/xml")
 
-@login_required(login_url='/login')
 def show_json(request):
     filter_type = request.GET.get("filter", "all")
+    user_id = request.GET.get("user_id")  # Workaround for cookie issues
+    
     if filter_type == "all":
         footballitems_list = FootballItem.objects.all()
     else:
-        footballitems_list = FootballItem.objects.filter(user=request.user)
+        # Try to get user from session or from user_id parameter
+        if request.user.is_authenticated:
+            footballitems_list = FootballItem.objects.filter(user=request.user)
+        elif user_id:
+            # Fallback: use provided user_id
+            from django.contrib.auth.models import User
+            try:
+                user = User.objects.get(id=user_id)
+                footballitems_list = FootballItem.objects.filter(user=user)
+            except User.DoesNotExist:
+                return JsonResponse([], safe=False, status=401)
+        else:
+            return JsonResponse([], safe=False, status=401)
     
+    # Format data to match Flutter's Product model structure
     data = [{
-        'id': item.id,
-        'name': item.name,
-        'price': item.price,
-        'description': item.description,
-        'thumbnail': item.thumbnail,
-        'category': item.category,
-        'brand': item.brand,
-        'stock': item.stock,
-        'size': item.size,
-        'created_at': item.created_at.isoformat() if item.created_at else None,
-        'is_featured': item.is_featured,
-        'user': {
-            'id': item.user.id if item.user else None,
-            'username': item.user.username if item.user else 'Unknown'
+        'model': 'main.footballitem',
+        'pk': str(item.id),
+        'fields': {
+            'user': item.user.id if item.user else None,
+            'name': item.name,
+            'price': item.price,
+            'description': item.description,
+            'thumbnail': item.thumbnail,
+            'category': item.category,
+            'is_featured': item.is_featured,
         }
     }
     for item in footballitems_list
@@ -115,83 +125,84 @@ def show_json_by_id(request, id):
     except FootballItem.DoesNotExist:
         return HttpResponse(status=404)
 
+@csrf_exempt
 def register(request):
     if request.method == "POST":
-        # Check if this is an AJAX request
-        is_ajax = request.headers.get('X-Requested-With') == 'XMLHttpRequest'
-        
         form = UserCreationForm(request.POST)
+        
         if form.is_valid():
             user = form.save()
-            
-            if is_ajax:
-                return JsonResponse({
-                    'status': 'success',
-                    'message': 'Account successfully created! Please login.',
-                    'redirect': reverse('main:login')
-                }, status=201)
-            else:
-                messages.success(request, 'Account successfully created!')
-                return redirect('main:login')
+            # Always return JSON for POST requests (used by Flutter)
+            return JsonResponse({
+                'status': 'success',
+                'message': 'Account successfully created! Please login.',
+                'username': user.username
+            }, status=201)
         else:
-            if is_ajax:
-                errors = {}
-                for field, error_list in form.errors.items():
-                    errors[field] = [str(error) for error in error_list]
-                return JsonResponse({
-                    'status': 'error',
-                    'message': 'Registration failed. Please check your inputs.',
-                    'errors': errors
-                }, status=400)
+            # Return JSON with errors
+            errors = {}
+            for field, error_list in form.errors.items():
+                errors[field] = [str(error) for error in error_list]
+            return JsonResponse({
+                'status': 'error',
+                'message': 'Registration failed. Please check your inputs.',
+                'errors': errors
+            }, status=400)
     else:
+        # GET request - show HTML form
         form = UserCreationForm()
-    
-    context = {'form': form}
-    return render(request, 'register.html', context)
+        context = {'form': form}
+        return render(request, 'register.html', context)
 
+@csrf_exempt
 def login_user(request):
     if request.method == "POST":
-        # Check if this is an AJAX request
-        is_ajax = request.headers.get('X-Requested-With') == 'XMLHttpRequest'
-        
         form = AuthenticationForm(request, data=request.POST)
 
         if form.is_valid():
             user = form.get_user()
             login(request, user)
-            
-            if is_ajax:
-                return JsonResponse({
-                    'status': 'success',
-                    'message': 'Login successful!',
-                    'redirect': reverse('main:show_main'),
-                    'username': user.username
-                }, status=200)
-            else:
-                response = HttpResponseRedirect(reverse("main:show_main"))
-                response.set_cookie('last_login', str(datetime.datetime.now()))
-                return response
+            # Always return JSON for POST requests (used by Flutter)
+            return JsonResponse({
+                'status': True,
+                'message': 'Login successful!',
+                'username': user.username,
+                'user_id': user.id  # Add user_id for Flutter workaround
+            }, status=200)
         else:
-            if is_ajax:
-                errors = {}
-                for field, error_list in form.errors.items():
-                    errors[field] = [str(error) for error in error_list]
-                return JsonResponse({
-                    'status': 'error',
-                    'message': 'Invalid username or password.',
-                    'errors': errors
-                }, status=400)
+            # Return JSON with errors
+            errors = {}
+            for field, error_list in form.errors.items():
+                errors[field] = [str(error) for error in error_list]
+            return JsonResponse({
+                'status': False,
+                'message': 'Invalid username or password.',
+                'errors': errors
+            }, status=401)
     else:
+        # GET request - show HTML form
         form = AuthenticationForm(request)
+        context = {'form': form}
+        return render(request, 'login.html', context)
 
-    context = {'form': form}
-    return render(request, 'login.html', context)
-
+@csrf_exempt
 def logout_user(request):
+    username = request.user.username if request.user.is_authenticated else 'Guest'
     logout(request)
-    response = HttpResponseRedirect(reverse('main:login'))
-    response.delete_cookie('last_login')
-    return response
+    
+    # Check if this is an API request (from Flutter)
+    is_api = request.content_type == 'application/x-www-form-urlencoded' or request.method == 'POST'
+    
+    if is_api and request.method == 'POST':
+        return JsonResponse({
+            'status': True,
+            'message': 'Logged out successfully!',
+            'username': username
+        }, status=200)
+    else:
+        response = HttpResponseRedirect(reverse('main:login'))
+        response.delete_cookie('last_login')
+        return response
 
 def edit_football_item(request, id):
     football_item = get_object_or_404(FootballItem, pk=id)
@@ -208,11 +219,41 @@ def delete_football_item(request, id):
     football_item = get_object_or_404(FootballItem, pk=id)
     football_item.delete()
     return redirect('main:show_main')
-    
+
 @csrf_exempt
 @require_POST
-@login_required(login_url='/login')
 def create_football_item_ajax(request):
+    # Debug logging
+    print(f"User authenticated: {request.user.is_authenticated}")
+    print(f"User: {request.user}")
+    print(f"Session key: {request.session.session_key}")
+    print(f"Cookies: {request.COOKIES}")
+    
+    # TEMPORARY WORKAROUND: Get user ID from POST data instead of session
+    # This is a workaround for Flutter Web cookie issues
+    user_id = request.POST.get('user_id')
+    
+    # Check if user is authenticated OR if user_id is provided
+    if not request.user.is_authenticated and not user_id:
+        return JsonResponse({
+            'status': 'error',
+            'message': 'You must be logged in to create products.'
+        }, status=401)
+    
+    # Get the actual user
+    if request.user.is_authenticated:
+        user = request.user
+    else:
+        # Fallback: use provided user_id
+        from django.contrib.auth.models import User
+        try:
+            user = User.objects.get(id=user_id)
+        except User.DoesNotExist:
+            return JsonResponse({
+                'status': 'error',
+                'message': 'Invalid user.'
+            }, status=401)
+    
     name = strip_tags(request.POST.get("name"))
     description = strip_tags(request.POST.get("description"))
     price = request.POST.get("price")
@@ -221,7 +262,9 @@ def create_football_item_ajax(request):
     brand = request.POST.get("brand")
     stock = request.POST.get("stock")
     size = request.POST.get("size")
-    is_featured = request.POST.get("is_featured") == 'on'
+    # Handle boolean from Flutter or 'on' from web form
+    is_featured_value = request.POST.get("is_featured")
+    is_featured = is_featured_value in ['true', 'True', 'on', True]
     
     new_item = FootballItem(
         name=name,
@@ -233,7 +276,7 @@ def create_football_item_ajax(request):
         stock=stock if stock else 0,
         size=size if size else None,
         is_featured=is_featured,
-        user=request.user
+        user=user  # Use the user we determined above
     )
     new_item.save()
     
